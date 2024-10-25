@@ -23,8 +23,8 @@ public class Timeslot implements Comparable<Timeslot> {
      */
     public boolean setTimeslot(String slot) {
         switch (slot) {
-            case "1" -> { this.hour = 9; this.minute = 0; return true; }
-            case "2" -> { this.hour = 9; this.minute = 30; return true; }
+            case "9:00 AM" -> { this.hour = 9; this.minute = 0; return true; }
+            case "9:30 AM" -> { this.hour = 9; this.minute = 30; return true; }
             case "3" -> { this.hour = 10; this.minute = 0; return true; }
             case "4" -> { this.hour = 10; this.minute = 30; return true; }
             case "5" -> { this.hour = 11; this.minute = 0; return true; }
