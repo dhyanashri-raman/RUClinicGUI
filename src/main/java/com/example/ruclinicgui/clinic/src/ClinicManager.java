@@ -126,7 +126,7 @@ public class ClinicManager {
     }
 
     public void loadProviders() {
-        String fileName = "clinic/src/providers.txt";
+        String fileName = "src/main/java/com/example/ruclinicgui/clinic/src/providers.txt";
         File file = new File(fileName);
 
         if (!file.exists()) {
