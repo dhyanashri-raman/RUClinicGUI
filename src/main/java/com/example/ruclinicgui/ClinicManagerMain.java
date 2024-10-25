@@ -3,7 +3,7 @@ package com.example.ruclinicgui;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class HelloController {
+public class ClinicManagerMain {
     @FXML
     private Label welcomeText;
 
