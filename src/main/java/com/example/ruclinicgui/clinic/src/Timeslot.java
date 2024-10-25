@@ -25,16 +25,16 @@ public class Timeslot implements Comparable<Timeslot> {
         switch (slot) {
             case "9:00 AM" -> { this.hour = 9; this.minute = 0; return true; }
             case "9:30 AM" -> { this.hour = 9; this.minute = 30; return true; }
-            case "3" -> { this.hour = 10; this.minute = 0; return true; }
-            case "4" -> { this.hour = 10; this.minute = 30; return true; }
-            case "5" -> { this.hour = 11; this.minute = 0; return true; }
-            case "6" -> { this.hour = 11; this.minute = 30; return true; }
-            case "7" -> { this.hour = 14; this.minute = 0; return true; }
-            case "8" -> { this.hour = 14; this.minute = 30; return true; }
-            case "9" -> { this.hour = 15; this.minute = 0; return true; }
-            case "10" -> { this.hour = 15; this.minute = 30; return true; }
-            case "11" -> { this.hour = 16; this.minute = 0; return true; }
-            case "12" -> { this.hour = 16; this.minute = 30; return true; }
+            case "10:00 AM" -> { this.hour = 10; this.minute = 0; return true; }
+            case "10:30 AM" -> { this.hour = 10; this.minute = 30; return true; }
+            case "11:00 AM" -> { this.hour = 11; this.minute = 0; return true; }
+            case "11:30 AM" -> { this.hour = 11; this.minute = 30; return true; }
+            case "2:00 PM" -> { this.hour = 14; this.minute = 0; return true; }
+            case "2:30 PM" -> { this.hour = 14; this.minute = 30; return true; }
+            case "3:00 PM" -> { this.hour = 15; this.minute = 0; return true; }
+            case "3:30 PM" -> { this.hour = 15; this.minute = 30; return true; }
+            case "4:00 PM" -> { this.hour = 16; this.minute = 0; return true; }
+            case "4:30 PM" -> { this.hour = 16; this.minute = 30; return true; }
             default -> { return false; }
         }
     }

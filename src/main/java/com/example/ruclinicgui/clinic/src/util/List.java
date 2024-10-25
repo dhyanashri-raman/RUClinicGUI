@@ -85,6 +85,12 @@ public class List<E> implements Iterable<E> {
         }
     }
 
+    public void addAll(E e) {
+        for (int i = 0; i < size(); i++) {
+            this.add(get(i));
+        }
+    }
+
     /**
      * Method: Removes the specified element from the list.
      *
