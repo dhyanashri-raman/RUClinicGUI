@@ -14,6 +14,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <VBox alignment="CENTER" prefHeight="551.0" prefWidth="676.0" spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ruclinicgui.ClinicManagerMain">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -38,7 +40,15 @@
                               </toggleGroup>
                            </RadioButton>
                            <RadioButton layoutX="429.0" layoutY="24.0" mnemonicParsing="false" text="Imaging Service" toggleGroup="$chooseOne" />
-                           <ComboBox layoutX="14.0" layoutY="130.0" prefWidth="150.0" promptText="Timeslot" />
+                           <ComboBox fx:id="myComboBox" layoutX="14.0" layoutY="130.0" prefWidth="150.0" promptText="Timeslot">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="Option 1" />
+                                        <String fx:value="Option 2" />
+                                        <String fx:value="Option 3" />
+                                    </FXCollections>
+                                </items>
+                            </ComboBox>
                         </children>
                      </AnchorPane>
                </content>
