@@ -8,6 +8,7 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -15,17 +16,17 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="CENTER" prefHeight="551.0" prefWidth="676.0" spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ruclinicgui.ClinicManagerController">
+<VBox alignment="CENTER" prefHeight="551.0" prefWidth="676.0" spacing="20.0" style="-fx-background-color: bbcfb8;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ruclinicgui.ClinicManagerController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
    <BorderPane prefHeight="493.0" prefWidth="588.0">
       <center>
-         <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+         <TabPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: 404d3e;" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
            <tabs>
              <Tab text="Schedule/Cancel">
                <content>
-                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="325.0" prefWidth="636.0">
+                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="495.0" prefWidth="636.0" style="-fx-background-color: a7c2a3;">
                         <children>
                            <DatePicker layoutX="126.0" layoutY="26.0" />
                            <Text layoutX="6.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Appointment Date: " />
@@ -41,13 +42,15 @@
                            <RadioButton layoutX="429.0" layoutY="24.0" mnemonicParsing="false" text="Imaging Service" toggleGroup="$chooseOne" />
                            <ChoiceBox fx:id="chooseTimeslot" layoutX="75.0" layoutY="144.0" prefWidth="150.0" />
                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                           <Text fx:id="timeslot" layoutX="11.0" layoutY="161.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Timeslot:" />
+                           <Text fx:id="timeslot" layoutX="6.0" layoutY="161.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Timeslot:" />
                            <Text fx:id="provider" layoutX="251.0" layoutY="161.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Provider" />
                            <ChoiceBox fx:id="chooseProvider" layoutX="309.0" layoutY="144.0" prefWidth="150.0" />
                            <Button layoutX="118.0" layoutY="208.0" mnemonicParsing="false" text="Schedule" />
                            <Button layoutX="275.0" layoutY="208.0" mnemonicParsing="false" text="Cancel" />
                            <Button layoutX="433.0" layoutY="208.0" mnemonicParsing="false" text="Clear" />
-                           <Button fx:id="loadProvidersButton" layoutX="506.0" layoutY="144.0" mnemonicParsing="false" text="Load Providers" onAction="#onLoadProvidersClick"/>
+                           <Button fx:id="loadProvidersButton" layoutX="506.0" layoutY="144.0" mnemonicParsing="false" onAction="#onLoadProvidersClick" text="Load Providers" />
+                           <Text layoutX="6.0" layoutY="275.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Place your input here:" />
+                           <TextArea layoutY="292.0" prefHeight="200.0" prefWidth="636.0" />
                         </children>
                      </AnchorPane>
                </content>

@@ -10,17 +10,18 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
 
 public class ClinicManagerController implements Initializable {
 
-    List<Appointment> appts = new List <Appointment>();
-    List <Provider> providers = new List <Provider>();
+    List<Appointment> appts = new List <>();
+    List <Provider> providers = new List<>();
     CircularLinkedList technicians = new CircularLinkedList();
     Node pointer;
-    List<Appointment> imagingAppts = new List<Appointment>();
+    List<Appointment> imagingAppts = new List<>();
     Sort sort = new Sort();
     ListMethods methods = new ListMethods();
 
@@ -37,7 +38,7 @@ public class ClinicManagerController implements Initializable {
     private ChoiceBox<String> chooseTimeslot;
 
     @FXML
-    private ChoiceBox<Provider> chooseProvider;
+    private ChoiceBox<String> chooseProvider;
 
     @FXML
     private Text timeslot;
@@ -82,7 +83,6 @@ public class ClinicManagerController implements Initializable {
             // Validate the file extension
             if (file.getName().endsWith(".txt")) {
                 System.out.println("File selected: " + file.getAbsolutePath());
-                timeslot.setText("Selected file: " + file.getName());
 
                 // Call the loadProviders method with the selected file
                 loadProviders(file);
@@ -129,8 +129,9 @@ public class ClinicManagerController implements Initializable {
             pointer = technicians.getHead();
 
             // Populate the ChoiceBox with provider names
-            chooseProvider.getItems().clear(); // Clear existing items
-            //chooseProvider.getItems().addAll(providers); // Add all providers to the ChoiceBox
+            for (Provider provider : providers) {
+                chooseProvider.getItems().add(provider.toString());
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
