@@ -31,9 +31,9 @@
                            <DatePicker layoutX="126.0" layoutY="26.0" />
                            <Text layoutX="6.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Appointment Date: " />
                            <Text layoutX="6.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Patient Information:" />
-                           <TextField layoutX="126.0" layoutY="86.0" promptText="enter first name" />
-                           <TextField layoutX="288.0" layoutY="86.0" promptText="enter last name" />
-                           <DatePicker layoutX="451.0" layoutY="86.0" promptText="select date of birth" />
+                           <TextField fx:id="fname" layoutX="126.0" layoutY="86.0" promptText="enter first name" />
+                           <TextField fx:id="lname" layoutX="288.0" layoutY="86.0" promptText="enter last name" />
+                           <DatePicker fx:id="dob" layoutX="451.0" layoutY="86.0" promptText="select date of birth" />
                            <RadioButton layoutX="318.0" layoutY="24.0" mnemonicParsing="false" text="Office Visit">
                               <toggleGroup>
                                  <ToggleGroup fx:id="chooseOne" />

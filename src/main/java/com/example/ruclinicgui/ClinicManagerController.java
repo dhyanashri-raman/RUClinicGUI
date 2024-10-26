@@ -10,6 +10,8 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.Scanner;
@@ -26,6 +28,52 @@ public class ClinicManagerController implements Initializable {
     ListMethods methods = new ListMethods();
 
     @FXML
+    private DatePicker datePicker;
+
+    @FXML
+    private Date getDateSelected() {
+        // Get the selected date from the DatePicker
+        LocalDate selectedDate = datePicker.getValue();
+        String formattedDate;
+
+        if (selectedDate != null) {
+            // Format the date as "M/d/yy"
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yy");
+            formattedDate = selectedDate.format(formatter);
+        } else {
+            System.out.println("No date selected");
+            return null;
+        }
+        if (!checkApptDate(formattedDate)) {
+            return null;
+        }
+        return stringToDate(formattedDate);
+    }
+
+    public boolean checkApptDate(String input) {
+        Date date = stringToDate(input);
+        if (!date.isValidDate()) {
+            System.out.println("clinic.src.Appointment date: " + input + " is not a valid calendar date");
+            return false;
+        }
+        else if(date.isBeforeToday() || date.isToday()) {
+            System.out.println("clinic.src.Appointment date: " + input + " is today or a date before today.");
+            return false;
+        }
+        else if (date.onWeekend()) {
+            System.out.println("clinic.src.Appointment date: " + input + " is Saturday or Sunday.");
+            return false;
+        }
+        else if(!date.isWithinSixMonths()) {
+            System.out.println("clinic.src.Appointment date: " + input + " is not within six months.");
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    @FXML
     private RadioButton option1;  // Corresponds to fx:id="option1" in FXML
 
     @FXML
@@ -33,6 +81,64 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     private ToggleGroup choiceGroup;  // Corresponds to fx:id="choiceGroup" in FXML
+
+    @FXML
+    private DatePicker dob;
+
+    @FXML
+    private TextField fname;
+
+    @FXML
+    private TextField lname;
+
+    @FXML
+    private Person getPatient() {
+        LocalDate selectedDate = dob.getValue();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yy");
+        String formattedDate = selectedDate.format(formatter);
+        Date date = stringToDate(formattedDate);
+        if(!checkDOB(date)){
+            return null;
+        }
+        Profile patientProfile = new Profile(fname.getText(), lname.getText(), stringToDate(formattedDate));
+        return new Person(patientProfile);
+    }
+
+    @FXML
+    private Timeslot getTimeslot() {
+        String slotString = chooseTimeslot.getValue();
+        Timeslot slot = new Timeslot();
+        slot.setTimeslot(slotString);
+        return slot;
+    }
+
+    @FXML
+    private void schedule() {
+        // this is where we will implement the getters like getPatient, getDateSelected, etc.
+        // if any of them return null that means it wasn't filled out or there was an error in the input
+        if (getTypeOfAppointment().equals("D")) {
+
+        }
+        else if (getTypeOfAppointment().equals("T")){
+
+    }
+
+    public boolean checkDOB(Date dob)
+    {
+        // TURN PRINT STATEMENTS TO DISPLAYING TEXT FIELDS ON INTERFACE
+        if(!dob.isValidDate()) {
+            System.out.println("Patient dob: " + dob.toString() + " is not a valid calendar date");
+            return false;
+        }
+        else if(dob.isToday() || dob.isFutureDate()) {
+            System.out.println("Patient dob: " + dob.toString() + " is today or a date after today.");
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
 
     @FXML
     private ChoiceBox<String> chooseTimeslot;
@@ -48,15 +154,21 @@ public class ClinicManagerController implements Initializable {
 
     // This method is called when a RadioButton is selected
     @FXML
-    private void handleSelection() {
+    private String getTypeOfAppointment() {
         // Get the selected RadioButton from the ToggleGroup
         RadioButton selectedRadioButton = (RadioButton) choiceGroup.getSelectedToggle();
         if (selectedRadioButton != null) {
             // Retrieve the text of the selected RadioButton
             String selectedOption = selectedRadioButton.getText();
+            if (selectedOption.equals("Office Visit")) {
+                return "D";
+            }
+            else if (selectedOption.equals("Imaging Service")) {
+                return "T";
+            }
             System.out.println("Selected option: " + selectedOption);
-            // Additional logic can be implemented based on the selection
         }
+        return null;
     }
 
     private final String[] times = {"9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM"};
@@ -100,6 +212,11 @@ public class ClinicManagerController implements Initializable {
         } else {
             timeslot.setText("File selection canceled.");
         }
+    }
+
+    @FXML
+    protected void onScheduleClick() {
+
     }
 
     public void loadProviders(File file) {

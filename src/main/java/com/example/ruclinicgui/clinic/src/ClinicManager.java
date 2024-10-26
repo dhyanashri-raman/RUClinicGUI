@@ -370,11 +370,11 @@ public class ClinicManager {
     public boolean checkDOB(Date dob)
     {
         if(!dob.isValidDate()) {
-            System.out.println("clinic.src.Patient dob: " + dob.toString() + " is not a valid calendar date");
+            System.out.println("Patient dob: " + dob.toString() + " is not a valid calendar date");
             return false;
         }
         else if(dob.isToday() || dob.isFutureDate()) {
-            System.out.println("clinic.src.Patient dob: " + dob.toString() + " is today or a date after today.");
+            System.out.println("Patient dob: " + dob.toString() + " is today or a date after today.");
             return false;
         }
         else {
