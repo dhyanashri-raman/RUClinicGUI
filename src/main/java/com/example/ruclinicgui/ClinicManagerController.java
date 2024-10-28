@@ -84,6 +84,9 @@ public class ClinicManagerController implements Initializable {
     }
 
     @FXML
+    private TextArea outputArea;
+
+    @FXML
     private RadioButton option1;  // Corresponds to fx:id="option1" in FXML
 
     @FXML
@@ -154,20 +157,27 @@ public class ClinicManagerController implements Initializable {
 
 
     @FXML
-    private void scheduleDocAppt() {
-        // this is where we will implement the getters like getPatient, getDateSelected, etc.
-        // if any of them return null that means it wasn't filled out or there was an error in the input
-        if (getDateSelected()==null || getTimeslot()==null || getPatient()==null || getProvider()==null) {
-            System.out.println("Missing information!"); // make this a modal pop up later
+    private void schedule() {
+        if (getDateSelected() == null || getTimeslot() == null || getPatient() == null || getProvider() == null) {
+            showAlertForSchedule("Missing Information", "Please fill out all required fields.");
             return;
         }
+
         if (getTypeOfAppointment(chooseOne).equals("D")) {
             Appointment newAppt = new Appointment(getDateSelected(), getTimeslot(), getPatient(), getProvider());
             appts.add(newAppt);
+            outputArea.appendText(appointmentDatePicker.getValue() + " " + getTimeslot().toString() + " " + getPatient().toString() + " " + getProvider().toString() + " booked.");
+        } else if (getTypeOfAppointment(chooseOne).equals("T")) {
+            // Handle other appointment types if needed
         }
-        else if (getTypeOfAppointment(chooseOne).equals("T")) {
-            // dhyanashri
-        }
+    }
+
+    private void showAlertForSchedule(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION); // You can change the type to ERROR, WARNING, etc. as needed
+        alert.setTitle(title);
+        alert.setHeaderText(null); // You can set a header text if needed
+        alert.setContentText(message);
+        alert.showAndWait(); // Show the dialog and wait for the user to close it
     }
 
     public boolean checkDOB(Date dob) {
@@ -189,7 +199,6 @@ public class ClinicManagerController implements Initializable {
         alert.setContentText(message);
         alert.showAndWait(); // Display the alert and wait for the user to close it
     }
-
 
     @FXML
     private ChoiceBox<String> chooseTimeslot;
@@ -215,7 +224,7 @@ public class ClinicManagerController implements Initializable {
                 return "T";
             }
         }
-    return "No option is selected";  // Return this if no RadioButton is selected
+        return "No option is selected";  // Return this if no RadioButton is selected
     }
 
 
@@ -224,6 +233,7 @@ public class ClinicManagerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         chooseTimeslot.getItems().addAll(times);
+        outputArea.setEditable(false);
     }
 
     @FXML
@@ -270,7 +280,7 @@ public class ClinicManagerController implements Initializable {
     @FXML
     protected void onScheduleClick() {
         System.out.println("Schedule button clicked");
-        scheduleDocAppt();
+        schedule();
     }
 
     public void loadProviders(File file) {
