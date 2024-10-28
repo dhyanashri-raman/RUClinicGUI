@@ -53,25 +53,34 @@ public class ClinicManagerController implements Initializable {
 
     public boolean checkApptDate(String input) {
         Date date = stringToDate(input);
+
+        // Check if the date is valid
         if (!date.isValidDate()) {
-            System.out.println("Appointment date: " + input + " is not a valid calendar date");
+            showAlert("Invalid Date", "Appointment date: " + input + " is not a valid calendar date.", Alert.AlertType.ERROR);
             return false;
         }
-        else if(date.isBeforeToday() || date.isToday()) {
-            System.out.println("Appointment date: " + input + " is today or a date before today.");
+        else if (date.isBeforeToday() || date.isToday()) {
+            showAlert("Invalid Appointment Date", "Appointment date: " + input + " is today or a date before today.", Alert.AlertType.WARNING);
             return false;
         }
         else if (date.onWeekend()) {
-            System.out.println("Appointment date: " + input + " is Saturday or Sunday.");
+            showAlert("Weekend Appointment", "Appointment date: " + input + " is Saturday or Sunday.", Alert.AlertType.WARNING);
             return false;
         }
-        else if(!date.isWithinSixMonths()) {
-            System.out.println("Appointment date: " + input + " is not within six months.");
+        else if (!date.isWithinSixMonths()) {
+            showAlert("Out of Range", "Appointment date: " + input + " is not within six months.", Alert.AlertType.WARNING);
             return false;
         }
-        else {
-            return true;
-        }
+
+        return true;
+    }
+
+    private void showAlert(String title, String message, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null); // Optional: Remove if you want a header
+        alert.setContentText(message);
+        alert.showAndWait(); // Shows the alert and waits for the user to close it
     }
 
     @FXML
@@ -161,20 +170,24 @@ public class ClinicManagerController implements Initializable {
         }
     }
 
-    public boolean checkDOB(Date dob)
-    {
-        // TURN PRINT STATEMENTS TO MODALS
-        if(!dob.isValidDate()) {
-            System.out.println("Patient dob: " + dob.toString() + " is not a valid calendar date");
+    public boolean checkDOB(Date dob) {
+        if (!dob.isValidDate()) {
+            showAlertDOB("Invalid Date", "Patient DOB " + dob.toString() + " is not a valid calendar date.");
             return false;
-        }
-        else if(dob.isToday() || dob.isFutureDate()) {
-            System.out.println("Patient dob: " + dob.toString() + " is today or a date after today.");
+        } else if (dob.isToday() || dob.isFutureDate()) {
+            showAlertDOB("Invalid Date", "Patient DOB " + dob.toString() + " is today or a future date.");
             return false;
-        }
-        else {
+        } else {
             return true;
         }
+    }
+
+    private void showAlertDOB(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null); // No header
+        alert.setContentText(message);
+        alert.showAndWait(); // Display the alert and wait for the user to close it
     }
 
 
