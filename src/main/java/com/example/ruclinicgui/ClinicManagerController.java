@@ -56,19 +56,19 @@ public class ClinicManagerController implements Initializable {
     public boolean checkApptDate(String input) {
         Date date = stringToDate(input);
         if (!date.isValidDate()) {
-            System.out.println("clinic.src.Appointment date: " + input + " is not a valid calendar date");
+            System.out.println("Appointment date: " + input + " is not a valid calendar date");
             return false;
         }
         else if(date.isBeforeToday() || date.isToday()) {
-            System.out.println("clinic.src.Appointment date: " + input + " is today or a date before today.");
+            System.out.println("Appointment date: " + input + " is today or a date before today.");
             return false;
         }
         else if (date.onWeekend()) {
-            System.out.println("clinic.src.Appointment date: " + input + " is Saturday or Sunday.");
+            System.out.println("Appointment date: " + input + " is Saturday or Sunday.");
             return false;
         }
         else if(!date.isWithinSixMonths()) {
-            System.out.println("clinic.src.Appointment date: " + input + " is not within six months.");
+            System.out.println("Appointment date: " + input + " is not within six months.");
             return false;
         }
         else {
@@ -87,12 +87,9 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     public void initializeToggleButtons() {
-        // Make sure the RadioButtons are added to the ToggleGroup (they should already be in FXML)
-        System.out.println("choiceGroup: " + chooseOne); // Should not be null if properly wired
+        System.out.println("choiceGroup: " + chooseOne);
         option1.setToggleGroup(chooseOne);
         option2.setToggleGroup(chooseOne);
-
-         //Listener to check which RadioButton is selected
         chooseOne.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             RadioButton selectedButton = (RadioButton) newValue;
             if (selectedButton == option1) {
@@ -103,8 +100,6 @@ public class ClinicManagerController implements Initializable {
                 System.out.println("No option is selected");
             }
         });
-
-        System.out.println("inside of initializetogglebutton");
     }
 
     @FXML
@@ -138,13 +133,32 @@ public class ClinicManagerController implements Initializable {
     }
 
     @FXML
-    private void schedule() {
+    private Provider getProvider() {
+        String selectedProvider = chooseProvider.getValue();
+        System.out.println("Selected Provider: " + selectedProvider);
+        Provider output = null;
+        for (Provider provider : providers) {
+            if (provider.toString().equals(selectedProvider)) {
+                output = provider;
+            }
+        }
+        return output;
+    }
+
+
+    @FXML
+    private void scheduleDocAppt() {
         // this is where we will implement the getters like getPatient, getDateSelected, etc.
         // if any of them return null that means it wasn't filled out or there was an error in the input
+        if (getDateSelected()!=null || getTimeslot()!=null || getPatient()!=null || getProvider()!=null) {
+            System.out.println("Missing information!"); // make this a modal pop up later
+        }
         if (getTypeOfAppointment(chooseOne).equals("D")) {
-
+            Appointment newAppt = new Appointment(getDateSelected(), getTimeslot(), getPatient(), getProvider());
+            appts.add(newAppt);
         }
         else if (getTypeOfAppointment(chooseOne).equals("T")) {
+            // dhyanashri
         }
     }
 
@@ -245,7 +259,7 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     protected void onScheduleClick() {
-
+        scheduleDocAppt();
     }
 
     public void loadProviders(File file) {
