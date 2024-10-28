@@ -28,12 +28,12 @@
                <content>
                  <AnchorPane fx:id="officeSe" minHeight="0.0" minWidth="0.0" prefHeight="495.0" prefWidth="636.0" style="-fx-background-color: a7c2a3;">
                         <children>
-                           <DatePicker layoutX="126.0" layoutY="26.0" />
+                           <DatePicker fx:id="appointmentDatePicker" layoutX="126.0" layoutY="26.0" />
                            <Text layoutX="6.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Appointment Date: " />
                            <Text layoutX="6.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Patient Information:" />
                            <TextField fx:id="fname" layoutX="126.0" layoutY="86.0" promptText="enter first name" />
                            <TextField fx:id="lname" layoutX="288.0" layoutY="86.0" promptText="enter last name" />
-                           <DatePicker fx:id="dob" layoutX="451.0" layoutY="86.0" promptText="select date of birth" />
+                           <DatePicker fx:id="dobDatePicker" layoutX="451.0" layoutY="86.0" promptText="select date of birth" />
                             <RadioButton fx:id="option1" layoutX="354.0" layoutY="30.0" mnemonicParsing="false" text="Office Visit">
                               <toggleGroup>
                                  <ToggleGroup fx:id="chooseOne" />
@@ -44,7 +44,7 @@
                            <Text fx:id="timeslot" layoutX="6.0" layoutY="161.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Timeslot:" />
                            <Text fx:id="provider" layoutX="251.0" layoutY="161.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Provider:" />
                            <ChoiceBox fx:id="chooseProvider" layoutX="309.0" layoutY="144.0" prefWidth="150.0" />
-                           <Button layoutX="118.0" layoutY="208.0" mnemonicParsing="false" text="Schedule" />
+                           <Button layoutX="118.0" layoutY="208.0" mnemonicParsing="false" onAction="#onScheduleClick" text="Schedule" />
                            <Button layoutX="275.0" layoutY="208.0" mnemonicParsing="false" text="Cancel" />
                            <Button layoutX="433.0" layoutY="208.0" mnemonicParsing="false" text="Clear" />
                            <Button fx:id="loadProvidersButton" layoutX="506.0" layoutY="144.0" mnemonicParsing="false" onAction="#onLoadProvidersClick" text="Load Providers" />

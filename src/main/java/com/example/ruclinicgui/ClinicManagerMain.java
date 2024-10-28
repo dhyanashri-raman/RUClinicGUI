@@ -9,9 +9,6 @@ import javafx.stage.Stage;
 import javafx.scene.control.Label;
 
 public class ClinicManagerMain extends Application {
-    @FXML
-    private Label welcomeText;
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("clinic-view.fxml"));
@@ -22,11 +19,6 @@ public class ClinicManagerMain extends Application {
         primaryStage.setTitle("Clinic Manager");
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
-
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
     }
 
     public static void main(String[] args) {

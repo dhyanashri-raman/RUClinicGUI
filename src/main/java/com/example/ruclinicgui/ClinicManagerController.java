@@ -28,20 +28,18 @@ public class ClinicManagerController implements Initializable {
     ListMethods methods = new ListMethods();
 
     @FXML
-    private DatePicker datePicker;
+    private DatePicker appointmentDatePicker;
 
     public ClinicManagerController() throws IOException {
     }
 
     @FXML
     private Date getDateSelected() {
-        // Get the selected date from the DatePicker
-        LocalDate selectedDate = datePicker.getValue();
+        LocalDate selectedDate = appointmentDatePicker.getValue();
         String formattedDate;
 
         if (selectedDate != null) {
-            // Format the date as "M/d/yy"
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
             formattedDate = selectedDate.format(formatter);
         } else {
             System.out.println("No date selected");
@@ -103,7 +101,7 @@ public class ClinicManagerController implements Initializable {
     }
 
     @FXML
-    private DatePicker dob;
+    private DatePicker dobDatePicker;
 
     @FXML
     private TextField fname;
@@ -113,8 +111,8 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     private Person getPatient() {
-        LocalDate selectedDate = dob.getValue();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yy");
+        LocalDate selectedDate = dobDatePicker.getValue();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         String formattedDate = selectedDate.format(formatter);
         Date date = stringToDate(formattedDate);
         if(!checkDOB(date)){
@@ -150,8 +148,9 @@ public class ClinicManagerController implements Initializable {
     private void scheduleDocAppt() {
         // this is where we will implement the getters like getPatient, getDateSelected, etc.
         // if any of them return null that means it wasn't filled out or there was an error in the input
-        if (getDateSelected()!=null || getTimeslot()!=null || getPatient()!=null || getProvider()!=null) {
+        if (getDateSelected()==null || getTimeslot()==null || getPatient()==null || getProvider()==null) {
             System.out.println("Missing information!"); // make this a modal pop up later
+            return;
         }
         if (getTypeOfAppointment(chooseOne).equals("D")) {
             Appointment newAppt = new Appointment(getDateSelected(), getTimeslot(), getPatient(), getProvider());
@@ -164,7 +163,7 @@ public class ClinicManagerController implements Initializable {
 
     public boolean checkDOB(Date dob)
     {
-        // TURN PRINT STATEMENTS TO DISPLAYING TEXT FIELDS ON INTERFACE
+        // TURN PRINT STATEMENTS TO MODALS
         if(!dob.isValidDate()) {
             System.out.println("Patient dob: " + dob.toString() + " is not a valid calendar date");
             return false;
@@ -198,10 +197,8 @@ public class ClinicManagerController implements Initializable {
             RadioButton selectedRadioButton = (RadioButton) selectedToggle;
             // Check which RadioButton is selected and return the corresponding string
             if (selectedRadioButton == option1) {
-                System.out.println("D");
                 return "D";
             } else if (selectedRadioButton == option2) {
-                System.out.println("T");
                 return "T";
             }
         }
@@ -253,12 +250,13 @@ public class ClinicManagerController implements Initializable {
                 alert.showAndWait();
             }
         } else {
-            timeslot.setText("File selection canceled.");
+            timeslot.setText("File selection canceled."); // turn this into modal
         }
     }
 
     @FXML
     protected void onScheduleClick() {
+        System.out.println("Schedule button clicked");
         scheduleDocAppt();
     }
 
