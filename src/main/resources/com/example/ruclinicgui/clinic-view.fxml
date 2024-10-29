@@ -44,29 +44,30 @@
                            <Text fx:id="timeslot" layoutX="6.0" layoutY="161.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Timeslot:" />
                            <Text fx:id="provider" layoutX="251.0" layoutY="161.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Provider:" />
                            <ChoiceBox fx:id="chooseProvider" layoutX="309.0" layoutY="144.0" prefWidth="150.0" />
-                           <Button layoutX="118.0" layoutY="208.0" mnemonicParsing="false" onAction="#onScheduleClick" text="Schedule" />
-                           <Button layoutX="275.0" layoutY="208.0" mnemonicParsing="false" text="Cancel" />
-                           <Button layoutX="433.0" layoutY="208.0" mnemonicParsing="false" onAction="#onClearClick" text="Clear" />
+                           <Button layoutX="61.0" layoutY="208.0" mnemonicParsing="false" onAction="#onScheduleClick" text="Schedule" />
+                           <Button layoutX="213.0" layoutY="208.0" mnemonicParsing="false" onAction="#onCancelClick" text="Cancel" />
+                           <Button layoutX="354.0" layoutY="208.0" mnemonicParsing="false" onAction="#onClearClick" text="Clear" />
                            <Button fx:id="loadProvidersButton" layoutX="506.0" layoutY="144.0" mnemonicParsing="false" onAction="#onLoadProvidersClick" text="Load Providers" />
+                           <Button fx:id="rescheduleButton" layoutX="468.0" layoutY="208.0" mnemonicParsing="false" text="Reschedule" />
                         </children>
                      </AnchorPane>
                </content>
              </Tab>
-             <Tab text="Reschedule">
+             <Tab fx:id="oldChoose" text="Reschedule">
                <content>
                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: a7c2a3;">
                         <children>
                            <Text layoutX="14.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Appointment Date" />
                            <Text layoutX="14.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="to be Rescheduled:" />
-                           <DatePicker layoutX="129.0" layoutY="27.0" />
+                           <DatePicker fx:id="appointmentDatePickerR" layoutX="129.0" layoutY="27.0" />
                            <Text layoutX="14.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Patient Information:" />
-                           <TextField layoutX="141.0" layoutY="84.0" promptText="enter first name" />
-                           <TextField layoutX="304.0" layoutY="84.0" promptText="enter last name" />
-                           <DatePicker layoutX="463.0" layoutY="84.0" promptText="select date of birth" />
+                           <TextField fx:id="fnameR" layoutX="141.0" layoutY="84.0" promptText="enter first name" />
+                           <TextField fx:id="lnameR" layoutX="304.0" layoutY="84.0" promptText="enter last name" />
+                           <DatePicker fx:id="dobDatePickerR" layoutX="463.0" layoutY="84.0" promptText="select date of birth" />
                            <Text layoutX="14.0" layoutY="168.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Old Timeslot: " />
                            <Text layoutX="307.0" layoutY="168.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Timeslot:" />
-                           <ChoiceBox layoutX="119.0" layoutY="151.0" prefWidth="150.0" />
-                           <ChoiceBox layoutX="419.0" layoutY="151.0" prefWidth="150.0" />
+                           <ChoiceBox fx:id="oldTimeslot" layoutX="119.0" layoutY="151.0" prefWidth="150.0" />
+                           <ChoiceBox fx:id="newTimeslot" layoutX="419.0" layoutY="151.0" prefWidth="150.0" />
                            <Button layoutX="280.0" layoutY="222.0" mnemonicParsing="false" text="Reschedule" />
                         </children></AnchorPane>
                </content>

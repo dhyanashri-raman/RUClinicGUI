@@ -44,9 +44,6 @@ public class ClinicManagerController implements Initializable {
         } else {
             return null;
         }
-        if (!checkApptDate(formattedDate)) {
-            return null;
-        }
         return stringToDate(formattedDate);
     }
 
@@ -98,16 +95,6 @@ public class ClinicManagerController implements Initializable {
     public void initializeToggleButtons() {
         option1.setToggleGroup(chooseOne);
         option2.setToggleGroup(chooseOne);
-//        chooseOne.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-//            RadioButton selectedButton = (RadioButton) newValue;
-//            if (selectedButton == option1) {
-//                System.out.println("Option 1 is selected");
-//            } else if (selectedButton == option2) {
-//                System.out.println("Option 2 is selected");
-//            } else {
-//                System.out.println("No option is selected");
-//            }
-//        });
     }
 
     @FXML
@@ -162,6 +149,19 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     private void schedule() {
+        LocalDate selectedDate = appointmentDatePicker.getValue();
+        String formattedDate;
+
+        if (selectedDate != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+            formattedDate = selectedDate.format(formatter);
+        } else {
+            return;
+        }
+        if (!checkApptDate(formattedDate)) {
+            return;
+        }
+
         StringBuilder missingFields = new StringBuilder();
 
         // Check each required field and add to missingFields if empty
@@ -179,7 +179,7 @@ public class ClinicManagerController implements Initializable {
         }
 
         // Only show the modal if there are missing fields
-        if (missingFields.length() > 0) {
+        if (!missingFields.isEmpty()) {
             showAlertForSchedule("Missing Information", "Please fill out the following fields:\n" + missingFields.toString());
             return;
         }
@@ -226,14 +226,60 @@ public class ClinicManagerController implements Initializable {
             return;
         }
 
-        // If all validations pass, create and add the appointment
         Appointment newAppt = new Appointment(date, slot, patient, provider);
         appts.add(newAppt);
 
-        // Display confirmation in output area
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        String formattedDate = appointmentDatePicker.getValue().format(formatter);
         outputArea.appendText(formattedDate + " " + slot.toString() + " " + patient.getProfile().toString() + " " + provider.toString() + " booked.\n");
+    }
+
+    @FXML
+    protected void cancel() {
+        StringBuilder missingFields = new StringBuilder();
+
+        if (getDateSelected() == null) {
+            missingFields.append("• Appointment Date\n");
+        }
+        if (getTimeslot() == null) {
+            missingFields.append("• Timeslot\n");
+        }
+        if (getPatient() == null) {
+            missingFields.append("• Patient Details\n");
+        }
+
+        if (!missingFields.isEmpty()) {
+            showAlertForSchedule("Missing Information", "Please fill out the following fields:\n" + missingFields.toString());
+            return;
+        }
+
+        Date date = getDateSelected();
+        Timeslot slot = getTimeslot();
+        Person patient = getPatient();
+
+        if (!slot.setTimeslot(slot.toString())) {
+            showAlertForSchedule("Invalid Timeslot", slot.toString() + " is not a valid timeslot.");
+            return;
+        }
+
+        int inptApp = methods.identifyAppointment(appts, patient.getProfile(), date, slot);
+        if (inptApp!=-1)
+        {
+            Appointment currApp = appts.get(inptApp);
+            Appointment appointment = new Appointment(currApp.getDate(), currApp.getTimeslot(), currApp.getProfile(), currApp.getProvider());
+            appts.remove(appointment);
+            outputArea.appendText(date.toString() + " " + slot.toString() + " " + patient.getProfile().toString() + " - appointment has been canceled.\n");
+            return;
+        }
+        outputArea.appendText(date.toString() + " " + slot.toString() + " " + patient.getProfile().toString() + " - appointment does not exist.\n");
+    }
+
+    @FXML
+    protected void onCancelClick() {
+        cancel();
+    }
+
+    @FXML
+    protected void reschedule() {
+
     }
 
     private void showAlertForSchedule(String title, String message) {
@@ -294,6 +340,9 @@ public class ClinicManagerController implements Initializable {
 
     private final String[] times = {"9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM"};
 
+    @FXML
+    private Button rescheduleButton;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         chooseTimeslot.getItems().addAll(times);
@@ -353,6 +402,11 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     protected void onClearClick() {
+        clear();
+    }
+
+    @FXML
+    private void clear() {
         appointmentDatePicker.setValue(null);
         chooseOne.selectToggle(null);
         dobDatePicker.setValue(null);
@@ -360,8 +414,6 @@ public class ClinicManagerController implements Initializable {
         lname.setText("");
         dobDatePicker.setValue(null);
         chooseTimeslot.setValue(null);
-        //chooseProvider.setValue(null);
-        // should i unload providers for this or nah?
     }
 
     public void loadProviders(File file) {
@@ -406,7 +458,7 @@ public class ClinicManagerController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        outputArea.appendText("Providers loaded to the list.\n");
+        outputArea.appendText("Providers loaded to the list." + "\n");
     }
 
     public void printProviders() {
@@ -414,7 +466,7 @@ public class ClinicManagerController implements Initializable {
         for (int i = 0; i<providers.size(); i++) {
             outputArea.appendText(providers.get(i).toString() + "\n");
         }
-        technicians.display();
+        outputArea.appendText(technicians.display());
     }
 
     public Date stringToDate(String date) {

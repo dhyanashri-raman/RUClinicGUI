@@ -107,27 +107,31 @@ public class CircularLinkedList {
      * Displays the list of technicians in the circular linked list, showing their names and locations.
      * If the list is empty, it prints a message indicating so.
      */
-    public void display() {
-        System.out.println();
-        System.out.println("Rotation list for the technicians.");
+    public String display() {
+        StringBuilder result = new StringBuilder();
+        result.append("\n Rotation list for the technicians.\n");
+
         if (head == null) {
-            System.out.println("clinic.src.util.List is empty.");
-            return;
+            return "List is empty.";
         }
+
         Node current = head;
         do {
-            System.out.print(current.technician.getProfile().getFirstName().toUpperCase() + " "
-                    + current.technician.getProfile().getLastName().toUpperCase() + " ("
-                    + current.technician.getProvider().getLocation().toString().toUpperCase() + ")");
+            result.append(current.technician.getProfile().getFirstName().toUpperCase())
+                    .append(" ")
+                    .append(current.technician.getProfile().getLastName().toUpperCase())
+                    .append(" (")
+                    .append(current.technician.getProvider().getLocation().toString().toUpperCase())
+                    .append(")");
 
             current = current.next;
 
             if (current != head) {
-                System.out.print(" --> ");
+                result.append(" --> ");
             }
         } while (current != head);
 
-        System.out.println();
+        return result.toString();
     }
 
     public int getSize()
