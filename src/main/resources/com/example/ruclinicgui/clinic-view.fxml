@@ -26,7 +26,7 @@
            <tabs>
              <Tab text="Schedule/Cancel">
                <content>
-                 <AnchorPane fx:id="officeSe" minHeight="0.0" minWidth="0.0" prefHeight="495.0" prefWidth="636.0" style="-fx-background-color: a7c2a3;">
+                 <AnchorPane fx:id="officeSe" minHeight="0.0" minWidth="0.0" prefHeight="267.0" prefWidth="636.0" style="-fx-background-color: a7c2a3;">
                         <children>
                            <DatePicker fx:id="appointmentDatePicker" layoutX="126.0" layoutY="26.0" />
                            <Text layoutX="6.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Appointment Date: " />
@@ -48,7 +48,6 @@
                            <Button layoutX="275.0" layoutY="208.0" mnemonicParsing="false" text="Cancel" />
                            <Button layoutX="433.0" layoutY="208.0" mnemonicParsing="false" onAction="#onClearClick" text="Clear" />
                            <Button fx:id="loadProvidersButton" layoutX="506.0" layoutY="144.0" mnemonicParsing="false" onAction="#onLoadProvidersClick" text="Load Providers" />
-                           <TextArea fx:id="outputArea" layoutY="251.0" prefHeight="241.0" prefWidth="636.0" promptText="Output Area" />
                         </children>
                      </AnchorPane>
                </content>
@@ -81,6 +80,7 @@
          </TabPane>
       </center>
    </BorderPane>
+   <TextArea fx:id="outputArea" prefHeight="381.0" prefWidth="636.0" promptText="Output Area" />
 
     <Label fx:id="welcomeText" />
 </VBox>

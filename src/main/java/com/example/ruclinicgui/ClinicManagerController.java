@@ -96,19 +96,18 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     public void initializeToggleButtons() {
-        System.out.println("choiceGroup: " + chooseOne);
         option1.setToggleGroup(chooseOne);
         option2.setToggleGroup(chooseOne);
-        chooseOne.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            RadioButton selectedButton = (RadioButton) newValue;
-            if (selectedButton == option1) {
-                System.out.println("Option 1 is selected");
-            } else if (selectedButton == option2) {
-                System.out.println("Option 2 is selected");
-            } else {
-                System.out.println("No option is selected");
-            }
-        });
+//        chooseOne.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+//            RadioButton selectedButton = (RadioButton) newValue;
+//            if (selectedButton == option1) {
+//                System.out.println("Option 1 is selected");
+//            } else if (selectedButton == option2) {
+//                System.out.println("Option 2 is selected");
+//            } else {
+//                System.out.println("No option is selected");
+//            }
+//        });
     }
 
     @FXML
@@ -151,7 +150,6 @@ public class ClinicManagerController implements Initializable {
     @FXML
     private Provider getProvider() {
         String selectedProvider = chooseProvider.getValue();
-        System.out.println("Selected Provider: " + selectedProvider);
         Provider output = null;
         for (Provider provider : providers) {
             if (provider.toString().equals(selectedProvider)) {
@@ -300,6 +298,25 @@ public class ClinicManagerController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         chooseTimeslot.getItems().addAll(times);
         outputArea.setEditable(false);
+        chooseOne.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            updateProviderList();
+        });
+    }
+
+    private void updateProviderList() {
+        chooseProvider.getItems().clear();
+        for (Provider provider : providers) {
+            if (getTypeOfAppointment(chooseOne).equals("D")) {
+                if (provider instanceof Doctor) {
+                    chooseProvider.getItems().add(provider.toString());
+                }
+            }
+            else if (getTypeOfAppointment(chooseOne).equals("T")) {
+                if (provider instanceof Technician) {
+                    chooseProvider.getItems().add(provider.toString());
+                }
+            }
+        }
     }
 
     @FXML
@@ -374,7 +391,6 @@ public class ClinicManagerController implements Initializable {
             pointer = technicians.getHead();
 
             for (Provider provider : providers) {
-                System.out.println(getTypeOfAppointment(chooseOne));
                 if (getTypeOfAppointment(chooseOne).equals("D")) {
                     if (provider instanceof Doctor) {
                         chooseProvider.getItems().add(provider.toString());
@@ -390,13 +406,13 @@ public class ClinicManagerController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("Providers loaded to the list.");
+        outputArea.appendText("Providers loaded to the list.\n");
     }
 
     public void printProviders() {
         sort.sortByProvider(providers); // check if this is the right syntax
         for (int i = 0; i<providers.size(); i++) {
-            System.out.println(providers.get(i).toString());
+            outputArea.appendText(providers.get(i).toString() + "\n");
         }
         technicians.display();
     }
