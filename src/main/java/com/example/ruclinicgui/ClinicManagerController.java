@@ -166,7 +166,9 @@ public class ClinicManagerController implements Initializable {
         if (getTypeOfAppointment(chooseOne).equals("D")) {
             Appointment newAppt = new Appointment(getDateSelected(), getTimeslot(), getPatient(), getProvider());
             appts.add(newAppt);
-            outputArea.appendText(appointmentDatePicker.getValue() + " " + getTimeslot().toString() + " " + getPatient().toString() + " " + getProvider().toString() + " booked.");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+            String formattedDate = appointmentDatePicker.getValue().format(formatter);
+            outputArea.appendText(formattedDate + " " + getTimeslot().toString() + " " + getPatient().toString() + " " + getProvider().toString() + " booked.");
         } else if (getTypeOfAppointment(chooseOne).equals("T")) {
             // Handle other appointment types if needed
         }
