@@ -42,7 +42,6 @@ public class ClinicManagerController implements Initializable {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
             formattedDate = selectedDate.format(formatter);
         } else {
-            System.out.println("No date selected");
             return null;
         }
         if (!checkApptDate(formattedDate)) {
@@ -124,6 +123,9 @@ public class ClinicManagerController implements Initializable {
     @FXML
     private Person getPatient() {
         LocalDate selectedDate = dobDatePicker.getValue();
+        if (selectedDate == null) {
+            return null;
+        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         String formattedDate = selectedDate.format(formatter);
         Date date = stringToDate(formattedDate);
@@ -137,6 +139,10 @@ public class ClinicManagerController implements Initializable {
     @FXML
     private Timeslot getTimeslot() {
         String slotString = chooseTimeslot.getValue();
+        if (slotString == null || slotString.isEmpty()) {
+//            showAlertForSchedule("Missing Information", "Please select a timeslot.");
+            return null;
+        }
         Timeslot slot = new Timeslot();
         slot.setTimeslot(slotString);
         return slot;
@@ -158,20 +164,78 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     private void schedule() {
-        if (getDateSelected() == null || getTimeslot() == null || getPatient() == null || getProvider() == null) {
-            showAlertForSchedule("Missing Information", "Please fill out all required fields.");
+        StringBuilder missingFields = new StringBuilder();
+
+        // Check each required field and add to missingFields if empty
+        if (getDateSelected() == null) {
+            missingFields.append("• Appointment Date\n");
+        }
+        if (getTimeslot() == null) {
+            missingFields.append("• Timeslot\n");
+        }
+        if (getPatient() == null) {
+            missingFields.append("• Patient Details\n");
+        }
+        if (getProvider() == null) {
+            missingFields.append("• Provider\n");
+        }
+
+        // Only show the modal if there are missing fields
+        if (missingFields.length() > 0) {
+            showAlertForSchedule("Missing Information", "Please fill out the following fields:\n" + missingFields.toString());
             return;
         }
 
-        if (getTypeOfAppointment(chooseOne).equals("D")) {
-            Appointment newAppt = new Appointment(getDateSelected(), getTimeslot(), getPatient(), getProvider());
-            appts.add(newAppt);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-            String formattedDate = appointmentDatePicker.getValue().format(formatter);
-            outputArea.appendText(formattedDate + " " + getTimeslot().toString() + " " + getPatient().toString() + " " + getProvider().toString() + " booked.");
-        } else if (getTypeOfAppointment(chooseOne).equals("T")) {
-            // Handle other appointment types if needed
+        // Collect data from fields
+        Date date = getDateSelected();
+        Timeslot slot = getTimeslot();
+        Person patient = getPatient();
+        Provider provider = getProvider();
+
+        // Validate date
+        if (!checkApptDate(date.toString())) {
+            return;
         }
+
+        // Validate timeslot
+        if (!slot.setTimeslot(slot.toString())) {
+            showAlertForSchedule("Invalid Timeslot", slot.toString() + " is not a valid timeslot.");
+            return;
+        }
+
+        // Validate patient's DOB
+        if (!checkDOB(patient.getProfile().getDob())) {
+            return;
+        }
+
+        // Check for provider availability (assuming only doctors can be providers here)
+        if (provider instanceof Doctor) {
+            Doctor doctor = (Doctor) provider;
+
+            // Check for duplicate appointment for this patient at the same date and timeslot
+            if (methods.identifyAppointment(appts, patient.getProfile(), date, slot) != -1) {
+                showAlertForSchedule("Duplicate Appointment", patient.getProfile().toString() + " already has an appointment at this time.");
+                return;
+            }
+
+            // Check if doctor is available at the given timeslot and date
+            if (methods.timeslotTaken(appts, doctor, slot, date) != -1) {
+                showAlertForSchedule("Timeslot Unavailable", doctor.toString() + " is not available at " + slot.toString() + ".");
+                return;
+            }
+        } else {
+            showAlertForSchedule("Invalid Provider", "Selected provider is not a doctor.");
+            return;
+        }
+
+        // If all validations pass, create and add the appointment
+        Appointment newAppt = new Appointment(date, slot, patient, provider);
+        appts.add(newAppt);
+
+        // Display confirmation in output area
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        String formattedDate = appointmentDatePicker.getValue().format(formatter);
+        outputArea.appendText(formattedDate + " " + slot.toString() + " " + patient.getProfile().toString() + " " + provider.toString() + " booked.\n");
     }
 
     private void showAlertForSchedule(String title, String message) {
@@ -240,49 +304,47 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     protected void onLoadProvidersClick() {
-        // Create a FileChooser
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a Provider File");
 
-        // Set extension filters to show .txt files
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(extFilter);
 
-        // Show open file dialog
         File file = fileChooser.showOpenDialog(loadProvidersButton.getScene().getWindow());
 
         if (file != null) {
-            // Validate the file extension
             if (file.getName().endsWith(".txt")) {
-                System.out.println("File selected: " + file.getAbsolutePath());
-
-                // Call the loadProviders method with the selected file
-                System.out.println("Went to loadProviders");
-                System.out.println(option1);
-                System.out.println(option2);
-                System.out.println(chooseOne);
                 initializeToggleButtons();
                 loadProviders(file);
                 printProviders();
 
                 loadProvidersButton.setDisable(true);
             } else {
-                // Invalid file type
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Invalid File Type");
                 alert.setHeaderText(null);
                 alert.setContentText("Please select a valid text file (.txt).");
                 alert.showAndWait();
             }
-        } else {
-            timeslot.setText("File selection canceled."); // turn this into modal
         }
     }
 
     @FXML
     protected void onScheduleClick() {
-        System.out.println("Schedule button clicked");
         schedule();
+    }
+
+    @FXML
+    protected void onClearClick() {
+        appointmentDatePicker.setValue(null);
+        chooseOne.selectToggle(null);
+        dobDatePicker.setValue(null);
+        fname.setText("");
+        lname.setText("");
+        dobDatePicker.setValue(null);
+        chooseTimeslot.setValue(null);
+        //chooseProvider.setValue(null);
+        // should i unload providers for this or nah?
     }
 
     public void loadProviders(File file) {
@@ -311,7 +373,6 @@ public class ClinicManagerController implements Initializable {
             }
             pointer = technicians.getHead();
 
-            // Populate the ChoiceBox with provider names
             for (Provider provider : providers) {
                 System.out.println(getTypeOfAppointment(chooseOne));
                 if (getTypeOfAppointment(chooseOne).equals("D")) {

@@ -46,7 +46,7 @@
                            <ChoiceBox fx:id="chooseProvider" layoutX="309.0" layoutY="144.0" prefWidth="150.0" />
                            <Button layoutX="118.0" layoutY="208.0" mnemonicParsing="false" onAction="#onScheduleClick" text="Schedule" />
                            <Button layoutX="275.0" layoutY="208.0" mnemonicParsing="false" text="Cancel" />
-                           <Button layoutX="433.0" layoutY="208.0" mnemonicParsing="false" text="Clear" />
+                           <Button layoutX="433.0" layoutY="208.0" mnemonicParsing="false" onAction="#onClearClick" text="Clear" />
                            <Button fx:id="loadProvidersButton" layoutX="506.0" layoutY="144.0" mnemonicParsing="false" onAction="#onLoadProvidersClick" text="Load Providers" />
                            <TextArea fx:id="outputArea" layoutY="251.0" prefHeight="241.0" prefWidth="636.0" promptText="Output Area" />
                         </children>

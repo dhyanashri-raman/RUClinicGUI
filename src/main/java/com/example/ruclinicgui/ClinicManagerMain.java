@@ -13,8 +13,6 @@ public class ClinicManagerMain extends Application {
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("clinic-view.fxml"));
         Parent root = loader.load();
-
-        // Create a scene with the loaded FXML
         Scene scene = new Scene(root);
         primaryStage.setTitle("Clinic Manager");
         primaryStage.setScene(scene);
