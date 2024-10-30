@@ -347,24 +347,32 @@ public class ClinicManagerController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         chooseTimeslot.getItems().addAll(times);
         outputArea.setEditable(false);
+        initializeToggleButtons();
+        updateProviderList2();
         chooseOne.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            updateProviderList();
+            //updateProviderTextBasedOnSelection();
+            updateProviderList2();
         });
     }
 
-    private void updateProviderList() {
-        chooseProvider.getItems().clear();
-        for (Provider provider : providers) {
-            if (getTypeOfAppointment(chooseOne).equals("D")) {
-                if (provider instanceof Doctor) {
+    @FXML
+    private Text providerText;
+
+    private void updateProviderList2(){
+        if(option1.isSelected())
+        {
+            providerText.setText("Provider: ");
+            chooseProvider.getItems().clear();
+            for(Provider provider : providers){
+                if(provider instanceof Doctor){
                     chooseProvider.getItems().add(provider.toString());
                 }
             }
-            else if (getTypeOfAppointment(chooseOne).equals("T")) {
-                if (provider instanceof Technician) {
-                    chooseProvider.getItems().add(provider.toString());
-                }
-            }
+        }
+        else if(option2.isSelected()) {
+            providerText.setText("Room: ");
+            chooseProvider.getItems().clear();
+            chooseProvider.getItems().addAll("XRAY", "CATSCAN", "ULTRASOUND");
         }
     }
 
@@ -445,11 +453,6 @@ public class ClinicManagerController implements Initializable {
             for (Provider provider : providers) {
                 if (getTypeOfAppointment(chooseOne).equals("D")) {
                     if (provider instanceof Doctor) {
-                        chooseProvider.getItems().add(provider.toString());
-                    }
-                }
-                else if (getTypeOfAppointment(chooseOne).equals("T")) {
-                    if (provider instanceof Technician) {
                         chooseProvider.getItems().add(provider.toString());
                     }
                 }
