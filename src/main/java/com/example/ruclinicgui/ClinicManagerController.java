@@ -35,16 +35,22 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     private Date getDateSelected() {
-        LocalDate selectedDate = appointmentDatePicker.getValue();
-        String formattedDate;
-
-        if (selectedDate != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-            formattedDate = selectedDate.format(formatter);
-        } else {
+        if (appointmentDatePicker.getValue() == null) {
             return null;
         }
-        return stringToDate(formattedDate);
+        String[] dateParts = appointmentDatePicker.getEditor().getText().split("/");
+
+        if (dateParts.length != 3) {
+            return null;
+        }
+        int month = Integer.parseInt(dateParts[0]);
+        int day = Integer.parseInt(dateParts[1]);
+        int year = Integer.parseInt(dateParts[2]);
+        Date selectedDate = new Date(year, month, day);
+        if (!selectedDate.isValidDate()) {
+            return null;
+        }
+        return selectedDate;
     }
 
     public boolean checkApptDate(String input) {
@@ -108,17 +114,22 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     private Person getPatient() {
-        LocalDate selectedDate = dobDatePicker.getValue();
-        if (selectedDate == null) {
+        String selectedDateText = dobDatePicker.getEditor().getText();
+        if (selectedDateText == null || selectedDateText.isEmpty()) {
             return null;
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        String formattedDate = selectedDate.format(formatter);
-        Date date = stringToDate(formattedDate);
-        if(!checkDOB(date)){
+        String[] dateParts = selectedDateText.split("/");
+        if (dateParts.length != 3) {
             return null;
         }
-        Profile patientProfile = new Profile(fname.getText(), lname.getText(), stringToDate(formattedDate));
+        int month = Integer.parseInt(dateParts[0]);
+        int day = Integer.parseInt(dateParts[1]);
+        int year = Integer.parseInt(dateParts[2]);
+        Date date = new Date(year, month, day);
+        if (!checkDOB(date)) {
+            return null;
+        }
+        Profile patientProfile = new Profile(fname.getText(), lname.getText(), date);
         return new Person(patientProfile);
     }
 
@@ -149,22 +160,17 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     private void schedule() {
-        LocalDate selectedDate = appointmentDatePicker.getValue();
+        String selectedDateText = appointmentDatePicker.getEditor().getText();
         String formattedDate;
-
-        if (selectedDate != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-            formattedDate = selectedDate.format(formatter);
+        if (selectedDateText != null && !selectedDateText.isEmpty()) {
+            formattedDate = selectedDateText;
         } else {
             return;
         }
         if (!checkApptDate(formattedDate)) {
             return;
         }
-
         StringBuilder missingFields = new StringBuilder();
-
-        // Check each required field and add to missingFields if empty
         if (getDateSelected() == null) {
             missingFields.append("• Appointment Date\n");
         }
@@ -177,46 +183,30 @@ public class ClinicManagerController implements Initializable {
         if (getProvider() == null) {
             missingFields.append("• Provider\n");
         }
-
-        // Only show the modal if there are missing fields
         if (!missingFields.isEmpty()) {
             showAlertForSchedule("Missing Information", "Please fill out the following fields:\n" + missingFields.toString());
             return;
         }
-
-        // Collect data from fields
         Date date = getDateSelected();
         Timeslot slot = getTimeslot();
         Person patient = getPatient();
         Provider provider = getProvider();
-
-        // Validate date
-        if (!checkApptDate(date.toString())) {
+        if (!checkApptDate(formattedDate)) {
             return;
         }
-
-        // Validate timeslot
         if (!slot.setTimeslot(slot.toString())) {
             showAlertForSchedule("Invalid Timeslot", slot.toString() + " is not a valid timeslot.");
             return;
         }
-
-        // Validate patient's DOB
         if (!checkDOB(patient.getProfile().getDob())) {
             return;
         }
-
-        // Check for provider availability (assuming only doctors can be providers here)
         if (provider instanceof Doctor) {
             Doctor doctor = (Doctor) provider;
-
-            // Check for duplicate appointment for this patient at the same date and timeslot
             if (methods.identifyAppointment(appts, patient.getProfile(), date, slot) != -1) {
                 showAlertForSchedule("Duplicate Appointment", patient.getProfile().toString() + " already has an appointment at this time.");
                 return;
             }
-
-            // Check if doctor is available at the given timeslot and date
             if (methods.timeslotTaken(appts, doctor, slot, date) != -1) {
                 showAlertForSchedule("Timeslot Unavailable", doctor.toString() + " is not available at " + slot.toString() + ".");
                 return;
@@ -225,10 +215,8 @@ public class ClinicManagerController implements Initializable {
             showAlertForSchedule("Invalid Provider", "Selected provider is not a doctor.");
             return;
         }
-
         Appointment newAppt = new Appointment(date, slot, patient, provider);
         appts.add(newAppt);
-
         outputArea.appendText(formattedDate + " " + slot.toString() + " " + patient.getProfile().toString() + " " + provider.toString() + " booked.\n");
     }
 
@@ -469,7 +457,7 @@ public class ClinicManagerController implements Initializable {
         for (int i = 0; i<providers.size(); i++) {
             outputArea.appendText(providers.get(i).toString() + "\n");
         }
-        outputArea.appendText(technicians.display());
+        outputArea.appendText(technicians.display() + "\n");
     }
 
     public Date stringToDate(String date) {
