@@ -345,8 +345,6 @@ public class ClinicManagerController implements Initializable {
         cityColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().name()));
         countyColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getCounty()));
         zipColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getZip()));
-
-        // Add data to table
         clinicLocations.getItems().addAll(Location.values());
     }
 
@@ -369,6 +367,65 @@ public class ClinicManagerController implements Initializable {
             chooseProvider.getItems().clear();
             chooseProvider.getItems().addAll("XRAY", "CATSCAN", "ULTRASOUND");
         }
+    }
+
+    @FXML
+    private TextArea printOutput;
+
+    @FXML
+    private Button PAButton;
+
+    @FXML
+    protected void onPAClick() {
+        printOutput.appendText(methods.printByAppointment(appts));
+    }
+
+    @FXML
+    private Button PCButton;
+
+    @FXML
+    protected void onPCClick() {
+        //printOutput.appendText(methods.printProviderCharges(appts, technicians));
+    }
+
+    @FXML
+    private Button PIButton;
+
+    @FXML
+    protected void onPIClick() {
+        methods.printImagingAppointments(appts);
+    }
+
+    @FXML
+    private Button PLButton;
+
+    @FXML
+    protected void onPLClick() {
+        methods.printByLocation(appts);
+    }
+
+    @FXML
+    private Button POButton;
+
+    @FXML
+    protected void onPOClick() {
+        methods.printOfficeAppointments(appts);
+    }
+
+    @FXML
+    private Button PPButton;
+
+    @FXML
+    protected void onPPClick() {
+        methods.printByPatient(appts);
+    }
+
+    @FXML
+    private Button PSButton;
+
+    @FXML
+    protected void onPSClick() {
+        methods.printAllCharge(appts);
     }
 
     @FXML

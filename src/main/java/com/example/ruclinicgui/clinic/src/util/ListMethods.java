@@ -44,25 +44,31 @@ public class ListMethods<E> extends List{
     /**
      * Prints all appointments ordered by date, time, and provider.
      */
-    public void printByAppointment(List <E> objects) {
-        System.out.println();
-        System.out.println("** List of appointments ordered by date/time/provider.");
+    public String printByAppointment(List<E> objects) {
+        StringBuilder output = new StringBuilder();
+        output.append("\n** List of appointments ordered by date/time/provider.\n");
         sort.sortByAppointment(objects);
-        printAppointments(objects);
-        System.out.println("** end of list **");
+        String appointmentsOutput = printAppointments(objects);
+        output.append(appointmentsOutput);
+        output.append("** end of list **");
+        return output.toString();
     }
+
 
     /**
      * Prints all appointments in the list.
      */
-    private void printAppointments(List <E> objects) {
+    private String printAppointments(List<E> objects) {
+        StringBuilder output = new StringBuilder();
         for (int i = 0; i < objects.size(); i++) {
             E obj = objects.get(i);
             if (obj instanceof Appointment) {
-                System.out.println(formatAppointment((Appointment) obj));
+                output.append(formatAppointment((Appointment) obj)).append("\n");
             }
         }
+        return output.toString();
     }
+
 
     /**
      * Formats an appointment for display.
