@@ -95,73 +95,93 @@ public class ListMethods<E> extends List{
                 imaging.getProvider().toString().toUpperCase());
     }
 
-    public void printOfficeAppointments(List <E> objects) {
-        System.out.println();
-        System.out.println("** clinic.src.util.List of office appointments ordered by county/date/time.");
+    public String printOfficeAppointments(List<E> objects) {
+        StringBuilder result = new StringBuilder();
+        result.append("\n");
+        result.append("** List of office appointments ordered by county/date/time.\n");
+
         sort.sortByLocation(objects);
-        printOfficeAppts(objects);
-        System.out.println("** end of list **");
+        result.append(printOfficeAppts(objects));
+
+        result.append("** end of list **\n");
+        return result.toString();
     }
 
-    private void printOfficeAppts(List <E> objects) {
-        for (int i =0; i < objects.size(); i++) {
+    private String printOfficeAppts(List<E> objects) {
+        StringBuilder appointments = new StringBuilder();
+
+        for (int i = 0; i < objects.size(); i++) {
             E obj = objects.get(i);
             if (obj instanceof Appointment) {
                 if (((Appointment) obj).getProvider() instanceof Doctor) {
-                    System.out.println(formatAppointment((Appointment) obj));
+                    appointments.append(formatAppointment((Appointment) obj)).append("\n");
                 }
             }
         }
+        return appointments.toString();
     }
 
-    public void printImagingAppointments(List <E> objects) {
-        System.out.println();
-        System.out.println("** List of radiology appointments ordered by county/date/time.");
+    public String printImagingAppointments(List<E> objects) {
+        StringBuilder result = new StringBuilder();
+        result.append("\n");
+        result.append("** List of radiology appointments ordered by county/date/time.\n");
         sort.sortByLocation(objects);
-        printImagingAppts(objects);
-        System.out.println("** end of list **");
+        result.append(printImagingAppts(objects));
+        result.append("** end of list **\n");
+        return result.toString();
     }
 
-    private void printImagingAppts(List <E> objects) {
-        for (int i = 0; i<objects.size(); i++) {
+    private String printImagingAppts(List<E> objects) {
+        StringBuilder appointments = new StringBuilder();
+        for (int i = 0; i < objects.size(); i++) {
             E obj = objects.get(i);
             if (obj instanceof Imaging) {
-                System.out.println(formatImagingAppointments((Imaging) obj));
+                appointments.append(formatImagingAppointments((Imaging) obj)).append("\n");
             }
         }
+        return appointments.toString();
     }
 
     /**
      * Prints all appointments ordered by patient, date, and time.
      */
-    public void printByPatient(List <E> objects) {
-        System.out.println();
-        System.out.println("** Appointments ordered by patient/date/time **");
+    public String printByPatient(List<E> objects) {
+        StringBuilder result = new StringBuilder();
+        result.append("\n");
+        result.append("** Appointments ordered by patient/date/time **\n");
+
         sort.sortByPatient(objects);
-        printAppointments(objects);
-        System.out.println("** end of list **");
+        result.append(printAppointments(objects));
+
+        result.append("** end of list **\n");
+        return result.toString();
     }
 
     /**
      * Prints all appointments ordered by location, date, and time.
      */
-    public void printByLocation(List <E> objects) {
-        System.out.println();
-        System.out.println("** Appointments ordered by county/date/time.");
-        sort.sortByLocation(objects);
-        printAppointments(objects);
-        System.out.println("** end of list **");
-    }
+    public String printByLocation(List<E> objects) {
+        StringBuilder result = new StringBuilder();
+        result.append("\n");
+        result.append("** Appointments ordered by county/date/time **\n");
 
+        sort.sortByLocation(objects);
+        result.append(printAppointments(objects));
+
+        result.append("** end of list **\n");
+        return result.toString();
+    }
     /**
      * Prints all charges for appointments, ordered by patient.
      */
-    public void printAllCharge(List <E> objects) {
+    public String printAllCharge(List<E> objects) {
         if (objects.size() == 0) {
-            System.out.println("There are no appointments in the system.");
-            return;
+            return "There are no appointments in the system.\n";
         }
-        System.out.println("** Billing statement ordered by patient **");
+
+        StringBuilder result = new StringBuilder();
+        result.append("\n** Billing statement ordered by patient **\n");
+
         sort.sortByProfile(objects);
         DecimalFormat formatDec = new DecimalFormat("$#,##0.00");
         int counter = 1;
@@ -170,24 +190,24 @@ public class ListMethods<E> extends List{
 
         for (int i = 0; i < objects.size(); i++) {
             E obj = objects.get(i);
-            int charge=0;
-            Profile profile=null;
+            int charge = 0;
+            Profile profile = null;
+
             if (obj instanceof Appointment) {
                 profile = ((Appointment) obj).getProfile().getProfile();
                 if (((Appointment) obj).getProvider() instanceof Doctor) {
-                    charge = ((Doctor)((Appointment) obj).getProvider()).getSpecialty().getCharge();
-                }
-                else if (((Appointment) obj).getProvider() instanceof Technician) {
+                    charge = ((Doctor) ((Appointment) obj).getProvider()).getSpecialty().getCharge();
+                } else if (((Appointment) obj).getProvider() instanceof Technician) {
                     charge = ((Technician) ((Appointment) obj).getProvider()).rate();
                 }
             }
 
             if (currentProfile == null || !currentProfile.equals(profile)) {
                 if (currentProfile != null) {
-                    System.out.printf("(%d) %s [amount due: %s]%n",
+                    result.append(String.format("(%d) %s [amount due: %s]%n",
                             counter++,
                             currentProfile.toString(),
-                            formatDec.format(currentCharge));
+                            formatDec.format(currentCharge)));
                 }
                 currentProfile = profile;
                 currentCharge = charge;
@@ -195,55 +215,67 @@ public class ListMethods<E> extends List{
                 currentCharge += charge;
             }
         }
+
         if (currentProfile != null) {
-            System.out.printf("(%d) %s [amount due: %s]%n",
+            result.append(String.format("(%d) %s [amount due: %s]%n",
                     counter,
                     currentProfile.toString(),
-                    formatDec.format(currentCharge));
+                    formatDec.format(currentCharge)));
         }
-        System.out.println("** end of list **");
+        result.append("** end of list **\n");
+
+        return result.toString();
     }
 
-    public void printProviderCharges(List <E> objects, CircularLinkedList techsCLL) {
+    public String printProviderCharges(List<E> objects, CircularLinkedList techsCLL) {
+        StringBuilder result = new StringBuilder();
         List<Provider> providers = new List<Provider>();
-        System.out.println("\n** Credit amount ordered by provider. **");
+        result.append("\n** Credit amount ordered by provider. **\n");
+
         Node start = techsCLL.getHead();
         Provider currProvider = null;
         Node curr = start;
-        do{
+
+        do {
             providers.add(curr.getTechnician());
             curr = curr.next;
-        }while(curr != start);
-        for(int i = 0; i<objects.size(); i++) {
-            if(objects.get(i) instanceof Appointment && ((Appointment) objects.get(i)).getProvider() instanceof Doctor) {
+        } while (curr != start);
+
+        for (int i = 0; i < objects.size(); i++) {
+            if (objects.get(i) instanceof Appointment && ((Appointment) objects.get(i)).getProvider() instanceof Doctor) {
                 providers.add(((Appointment) objects.get(i)).getProvider());
             }
         }
+
         sort.sortByProviderForPrint(providers);
         int counter = 0;
         int charge;
-        for(int j = 0; j<providers.size(); j++){
+
+        for (int j = 0; j < providers.size(); j++) {
             charge = 0;
             currProvider = providers.get(j);
-            for(int i = 0; i<objects.size(); i++) {
-                if(objects.get(i) instanceof Imaging && currProvider instanceof Technician) {
-                    if(((Imaging) objects.get(i)).getProvider().equals(currProvider)) {
+
+            for (int i = 0; i < objects.size(); i++) {
+                if (objects.get(i) instanceof Imaging && currProvider instanceof Technician) {
+                    if (((Imaging) objects.get(i)).getProvider().equals(currProvider)) {
                         charge += ((Imaging) objects.get(i)).getProvider().rate();
                     }
-                }
-                else if(objects.get(i) instanceof Appointment && currProvider instanceof Doctor) {
-                    if(((Appointment) objects.get(i)).getProvider().equals(currProvider)) {
+                } else if (objects.get(i) instanceof Appointment && currProvider instanceof Doctor) {
+                    if (((Appointment) objects.get(i)).getProvider().equals(currProvider)) {
                         charge += (((Appointment) objects.get(i)).getProvider().rate());
                     }
                 }
             }
             counter++;
-            System.out.println("(" + counter + ") " + currProvider.getProfile().toString() + " [credit amount: $" + charge + ".00] ");
+            result.append("(").append(counter).append(") ")
+                    .append(currProvider.getProfile().toString())
+                    .append(" [credit amount: $").append(charge).append(".00] \n");
         }
-        System.out.println("** end of list **\n");
-    }
 
-    // REMEMBER TO DO PS COMMAND - ask dhyana about this
+        result.append("** end of list **\n");
+
+        return result.toString();
+    }
 
     public int getDoctorFromNPI(List<E> objects, String npi) {
         for (int i = 0; i<objects.size(); i++) {

@@ -161,16 +161,6 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     private void schedule() {
-        String selectedDateText = appointmentDatePicker.getEditor().getText();
-        String formattedDate;
-        if (selectedDateText != null && !selectedDateText.isEmpty()) {
-            formattedDate = selectedDateText;
-        } else {
-            return;
-        }
-        if (!checkApptDate(formattedDate)) {
-            return;
-        }
         StringBuilder missingFields = new StringBuilder();
         if (getDateSelected() == null) {
             missingFields.append("• Appointment Date\n");
@@ -186,6 +176,15 @@ public class ClinicManagerController implements Initializable {
         }
         if (!missingFields.isEmpty()) {
             showAlertForSchedule("Missing Information", "Please fill out the following fields:\n" + missingFields.toString());
+        }
+        String selectedDateText = appointmentDatePicker.getEditor().getText();
+        String formattedDate;
+        if (selectedDateText != null && !selectedDateText.isEmpty()) {
+            formattedDate = selectedDateText;
+        } else {
+            return;
+        }
+        if (!checkApptDate(formattedDate)) {
             return;
         }
         Date date = getDateSelected();
@@ -385,7 +384,7 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     protected void onPCClick() {
-        //printOutput.appendText(methods.printProviderCharges(appts, technicians));
+        printOutput.appendText(methods.printProviderCharges(appts, technicians));
     }
 
     @FXML
@@ -393,7 +392,7 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     protected void onPIClick() {
-        methods.printImagingAppointments(appts);
+        printOutput.appendText(methods.printImagingAppointments(appts));
     }
 
     @FXML
@@ -401,7 +400,7 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     protected void onPLClick() {
-        methods.printByLocation(appts);
+        printOutput.appendText(methods.printByLocation(appts));
     }
 
     @FXML
@@ -409,7 +408,7 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     protected void onPOClick() {
-        methods.printOfficeAppointments(appts);
+        printOutput.appendText(methods.printOfficeAppointments(appts));
     }
 
     @FXML
@@ -417,7 +416,7 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     protected void onPPClick() {
-        methods.printByPatient(appts);
+        printOutput.appendText(methods.printByPatient(appts));
     }
 
     @FXML
@@ -425,7 +424,7 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     protected void onPSClick() {
-        methods.printAllCharge(appts);
+        printOutput.appendText(methods.printAllCharge(appts));
     }
 
     @FXML
@@ -474,6 +473,7 @@ public class ClinicManagerController implements Initializable {
         lname.setText("");
         dobDatePicker.setValue(null);
         chooseTimeslot.setValue(null);
+        chooseProvider.setValue(null);
     }
 
     @FXML
