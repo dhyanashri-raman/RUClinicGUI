@@ -2,6 +2,7 @@ package com.example.ruclinicgui;
 
 import com.example.ruclinicgui.clinic.src.*;
 import com.example.ruclinicgui.clinic.src.util.*;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -336,17 +337,23 @@ public class ClinicManagerController implements Initializable {
         chooseTimeslot.getItems().addAll(times);
         outputArea.setEditable(false);
         initializeToggleButtons();
-        updateProviderList2();
+        updateProviderList();
         chooseOne.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            //updateProviderTextBasedOnSelection();
-            updateProviderList2();
+            updateProviderList();
         });
+
+        cityColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().name()));
+        countyColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getCounty()));
+        zipColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getZip()));
+
+        // Add data to table
+        clinicLocations.getItems().addAll(Location.values());
     }
 
     @FXML
     private Text providerText;
 
-    private void updateProviderList2(){
+    private void updateProviderList(){
         if(option1.isSelected())
         {
             providerText.setText("Provider: ");
@@ -411,6 +418,20 @@ public class ClinicManagerController implements Initializable {
         dobDatePicker.setValue(null);
         chooseTimeslot.setValue(null);
     }
+
+    @FXML
+    private TableView<Location> clinicLocations;
+
+    @FXML
+    private TableColumn<Location, String> cityColumn;
+
+    @FXML
+    private TableColumn<Location, String> countyColumn;
+
+    @FXML
+    private TableColumn<Location, String> zipColumn;
+
+
 
     public void loadProviders(File file) {
         if (!file.exists()) {
