@@ -158,10 +158,10 @@ public class ClinicManagerController implements Initializable {
         return output;
     }
 
-
     @FXML
     private void schedule() {
         StringBuilder missingFields = new StringBuilder();
+        // Check for missing fields and build the message
         if (getDateSelected() == null) {
             missingFields.append("• Appointment Date\n");
         }
@@ -174,51 +174,106 @@ public class ClinicManagerController implements Initializable {
         if (getProvider() == null) {
             missingFields.append("• Provider\n");
         }
+        // Show missing fields alert if any
         if (!missingFields.isEmpty()) {
             showAlertForSchedule("Missing Information", "Please fill out the following fields:\n" + missingFields.toString());
         }
+        // Get data after missing field check
         String selectedDateText = appointmentDatePicker.getEditor().getText();
         String formattedDate;
         if (selectedDateText != null && !selectedDateText.isEmpty()) {
             formattedDate = selectedDateText;
         } else {
-            return;
+            return; // Return if no date is selected in the date picker editor
         }
-        if (!checkApptDate(formattedDate)) {
-            return;
-        }
+        // Additional validations (DOB, duplicate appointments, timeslot availability)
         Date date = getDateSelected();
         Timeslot slot = getTimeslot();
         Person patient = getPatient();
         Provider provider = getProvider();
-        if (!checkApptDate(formattedDate)) {
-            return;
+        checkApptDate(formattedDate);
+        if (patient != null) {
+            checkDOB(patient.getProfile().getDob());
         }
-        if (!slot.setTimeslot(slot.toString())) {
-            showAlertForSchedule("Invalid Timeslot", slot.toString() + " is not a valid timeslot.");
-            return;
-        }
-        if (!checkDOB(patient.getProfile().getDob())) {
-            return;
-        }
-        if (provider instanceof Doctor) {
+        boolean hadError = false;
+        if (patient!=null && provider instanceof Doctor) {
             Doctor doctor = (Doctor) provider;
             if (methods.identifyAppointment(appts, patient.getProfile(), date, slot) != -1) {
                 showAlertForSchedule("Duplicate Appointment", patient.getProfile().toString() + " already has an appointment at this time.");
-                return;
+                hadError = true;
             }
-            if (methods.timeslotTaken(appts, doctor, slot, date) != -1) {
+            if (methods.timeslotTaken(appts, doctor, slot, date) != -1 && !hadError) {
                 showAlertForSchedule("Timeslot Unavailable", doctor.toString() + " is not available at " + slot.toString() + ".");
-                return;
             }
-        } else {
-            showAlertForSchedule("Invalid Provider", "Selected provider is not a doctor.");
-            return;
         }
-        Appointment newAppt = new Appointment(date, slot, patient, provider);
-        appts.add(newAppt);
-        outputArea.appendText(formattedDate + " " + slot.toString() + " " + patient.getProfile().toString() + " " + provider.toString() + " booked.\n");
+
+        // Book appointment if all validations pass
+        if (missingFields.length() == 0 && checkApptDate(formattedDate) && slot != null && slot.setTimeslot(slot.toString())
+                && patient != null && checkDOB(patient.getProfile().getDob()) && provider instanceof Doctor) {
+
+            Appointment newAppt = new Appointment(date, slot, patient, provider);
+            appts.add(newAppt);
+            outputArea.appendText(formattedDate + " " + slot.toString() + " " + patient.getProfile().toString() + " " + provider.toString() + " booked.\n");
+        }
     }
+
+
+//    @FXML
+//    private void schedule() {
+//        StringBuilder missingFields = new StringBuilder();
+//        if (getDateSelected() == null) {
+//            missingFields.append("• Appointment Date\n");
+//        }
+//        if (getTimeslot() == null) {
+//            missingFields.append("• Timeslot\n");
+//        }
+//        if (getPatient() == null) {
+//            missingFields.append("• Patient Details\n");
+//        }
+//        if (getProvider() == null) {
+//            missingFields.append("• Provider\n");
+//        }
+//        if (!missingFields.isEmpty()) {
+//            showAlertForSchedule("Missing Information", "Please fill out the following fields:\n" + missingFields.toString());
+//        }
+//        String selectedDateText = appointmentDatePicker.getEditor().getText();
+//        String formattedDate;
+//        if (selectedDateText != null && !selectedDateText.isEmpty()) {
+//            formattedDate = selectedDateText;
+//        } else {
+//            return;
+//        }
+//        if (!checkApptDate(formattedDate)) {
+//            return;
+//        }
+//        Date date = getDateSelected();
+//        Timeslot slot = getTimeslot();
+//        Person patient = getPatient();
+//        Provider provider = getProvider();
+//        if (!checkApptDate(formattedDate)) {
+//            return;
+//        }
+//        if (patient != null && !checkDOB(patient.getProfile().getDob())) {
+//            return;
+//        }
+//        if (patient!=null && provider instanceof Doctor) {
+//            Doctor doctor = (Doctor) provider;
+//            if (methods.identifyAppointment(appts, patient.getProfile(), date, slot) != -1) {
+//                showAlertForSchedule("Duplicate Appointment", patient.getProfile().toString() + " already has an appointment at this time.");
+//                return;
+//            }
+//            if (methods.timeslotTaken(appts, doctor, slot, date) != -1) {
+//                showAlertForSchedule("Timeslot Unavailable", doctor.toString() + " is not available at " + slot.toString() + ".");
+//                return;
+//            }
+//        } else {
+//            showAlertForSchedule("Invalid Provider", "Selected provider is not a doctor.");
+//            return;
+//        }
+//        Appointment newAppt = new Appointment(date, slot, patient, provider);
+//        appts.add(newAppt);
+//        outputArea.appendText(formattedDate + " " + slot.toString() + " " + patient.getProfile().toString() + " " + provider.toString() + " booked.\n");
+//    }
 
     @FXML
     protected void cancel() {
