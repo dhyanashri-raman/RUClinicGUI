@@ -54,6 +54,26 @@ public class ClinicManagerController implements Initializable {
         return selectedDate;
     }
 
+    @FXML
+    private Date getDateSelectedR() {
+        if (appointmentDatePickerR.getValue() == null) {
+            return null;
+        }
+        String[] dateParts = appointmentDatePickerR.getEditor().getText().split("/");
+
+        if (dateParts.length != 3) {
+            return null;
+        }
+        int month = Integer.parseInt(dateParts[0]);
+        int day = Integer.parseInt(dateParts[1]);
+        int year = Integer.parseInt(dateParts[2]);
+        Date selectedDate = new Date(year, month, day);
+        if (!selectedDate.isValidDate()) {
+            return null;
+        }
+        return selectedDate;
+    }
+
     public boolean checkApptDate(String input) {
         Date date = stringToDate(input);
 
@@ -135,10 +155,52 @@ public class ClinicManagerController implements Initializable {
     }
 
     @FXML
+    private Person getPatientR() {
+        String selectedDateText = dobDatePickerR.getEditor().getText();
+        if (selectedDateText == null || selectedDateText.isEmpty()) {
+            return null;
+        }
+        String[] dateParts = selectedDateText.split("/");
+        if (dateParts.length != 3) {
+            return null;
+        }
+        int month = Integer.parseInt(dateParts[0]);
+        int day = Integer.parseInt(dateParts[1]);
+        int year = Integer.parseInt(dateParts[2]);
+        Date date = new Date(year, month, day);
+        if (!checkDOB(date)) {
+            return null;
+        }
+        Profile patientProfile = new Profile(fnameR.getText(), lnameR.getText(), date);
+        return new Person(patientProfile);
+    }
+
+    @FXML
     private Timeslot getTimeslot() {
         String slotString = chooseTimeslot.getValue();
         if (slotString == null || slotString.isEmpty()) {
-//            showAlertForSchedule("Missing Information", "Please select a timeslot.");
+            return null;
+        }
+        Timeslot slot = new Timeslot();
+        slot.setTimeslot(slotString);
+        return slot;
+    }
+
+    @FXML
+    private Timeslot getOldTimeslot() {
+        String slotString = oldTimeslot.getValue();
+        if (slotString == null || slotString.isEmpty()) {
+            return null;
+        }
+        Timeslot slot = new Timeslot();
+        slot.setTimeslot(slotString);
+        return slot;
+    }
+
+    @FXML
+    private Timeslot getNewTimeslot() {
+        String slotString = newTimeslot.getValue();
+        if (slotString == null || slotString.isEmpty()) {
             return null;
         }
         Timeslot slot = new Timeslot();
@@ -161,7 +223,6 @@ public class ClinicManagerController implements Initializable {
     @FXML
     private void schedule() {
         StringBuilder missingFields = new StringBuilder();
-        // Check for missing fields and build the message
         if (getDateSelected() == null) {
             missingFields.append("• Appointment Date\n");
         }
@@ -174,19 +235,16 @@ public class ClinicManagerController implements Initializable {
         if (getProvider() == null) {
             missingFields.append("• Provider\n");
         }
-        // Show missing fields alert if any
         if (!missingFields.isEmpty()) {
             showAlertForSchedule("Missing Information", "Please fill out the following fields:\n" + missingFields.toString());
         }
-        // Get data after missing field check
         String selectedDateText = appointmentDatePicker.getEditor().getText();
         String formattedDate;
         if (selectedDateText != null && !selectedDateText.isEmpty()) {
             formattedDate = selectedDateText;
         } else {
-            return; // Return if no date is selected in the date picker editor
+            return;
         }
-        // Additional validations (DOB, duplicate appointments, timeslot availability)
         Date date = getDateSelected();
         Timeslot slot = getTimeslot();
         Person patient = getPatient();
@@ -195,22 +253,19 @@ public class ClinicManagerController implements Initializable {
         if (patient != null) {
             checkDOB(patient.getProfile().getDob());
         }
-        boolean hadError = false;
         if (patient!=null && provider instanceof Doctor) {
             Doctor doctor = (Doctor) provider;
             if (methods.identifyAppointment(appts, patient.getProfile(), date, slot) != -1) {
                 showAlertForSchedule("Duplicate Appointment", patient.getProfile().toString() + " already has an appointment at this time.");
-                hadError = true;
+                return;
             }
-            if (methods.timeslotTaken(appts, doctor, slot, date) != -1 && !hadError) {
+            if (methods.timeslotTaken(appts, doctor, slot, date) != -1 ) {
                 showAlertForSchedule("Timeslot Unavailable", doctor.toString() + " is not available at " + slot.toString() + ".");
+                return;
             }
         }
-
-        // Book appointment if all validations pass
         if (missingFields.length() == 0 && checkApptDate(formattedDate) && slot != null && slot.setTimeslot(slot.toString())
                 && patient != null && checkDOB(patient.getProfile().getDob()) && provider instanceof Doctor) {
-
             Appointment newAppt = new Appointment(date, slot, patient, provider);
             appts.add(newAppt);
             outputArea.appendText(formattedDate + " " + slot.toString() + " " + patient.getProfile().toString() + " " + provider.toString() + " booked.\n");
@@ -321,9 +376,97 @@ public class ClinicManagerController implements Initializable {
     }
 
     @FXML
-    protected void reschedule() {
+    private DatePicker appointmentDatePickerR;
 
+    @FXML
+    private TextField fnameR;
+
+    @FXML
+    private TextField lnameR;
+
+    @FXML
+    private DatePicker dobDatePickerR;
+
+    @FXML
+    private ChoiceBox<String> oldTimeslot;
+
+    @FXML
+    private ChoiceBox<String> newTimeslot;
+
+    @FXML
+    private TextArea outputAreaR;
+
+    @FXML
+    protected void onRescheduleClick() {
+        reschedule();
     }
+
+    @FXML
+    protected void reschedule() {
+        StringBuilder missingFields = new StringBuilder();
+        // Check for missing fields and build the message
+        if (getDateSelectedR() == null) {
+            missingFields.append("• Appointment Date\n");
+        }
+        if (getOldTimeslot() == null) {
+            missingFields.append("• Old Timeslot\n");
+        }
+        if (getNewTimeslot() == null) {
+            missingFields.append("• New Timeslot\n");
+        }
+        if (getPatient() == null) {
+            missingFields.append("• Patient Details\n");
+        }
+        if (!missingFields.isEmpty()) {
+            showAlertForSchedule("Missing Information", "Please fill out the following fields:\n" + missingFields.toString());
+        }
+
+        String selectedDateText = appointmentDatePickerR.getEditor().getText();
+        String formattedDate;
+        if (selectedDateText != null && !selectedDateText.isEmpty()) {
+            formattedDate = selectedDateText;
+        } else {
+            return;
+        }
+        Date date = getDateSelectedR();
+        Timeslot oldSlot = getOldTimeslot();
+        Timeslot newSlot = getNewTimeslot();
+        Person patient = getPatientR();
+        checkApptDate(formattedDate);
+        if (patient != null) {
+            checkDOB(patient.getProfile().getDob());
+        }
+
+        int apptIndex = methods.identifyAppointment(appts, patient.getProfile(), date, oldSlot);
+
+        if (apptIndex == -1) {
+            outputAreaR.appendText(formattedDate + " " + oldSlot.toString() + " " + patient.getProfile().getFirstName() + " " + patient.getProfile().getLastName() + " " + patient.getProfile().getDob().toString() + " does not exist.\n");
+            return;
+        }
+
+        int apptIndex2 = methods.identifyAppointment(appts, patient.getProfile(), date, newSlot);
+        if (apptIndex2 !=-1) {
+            Appointment appointment = appts.get(apptIndex2);
+            outputAreaR.appendText(patient.getProfile().toString() + " has an existing appointment at " + appointment.getDate().toString() + " " + newSlot.toString() + "\n");
+            return;
+        }
+
+        Appointment appointment = appts.get(apptIndex);
+        Provider provider = (Provider) appointment.getProvider();
+
+        // [PATEL, BRIDGEWATER, Somerset 08807, FAMILY] is not available at slot 1.
+        if (methods.timeslotTaken(appts, provider, newSlot, date) != -1) {
+            outputAreaR.appendText(provider.toString() + " is not available at " + newTimeslot.getValue() + "\n");
+            return;
+        }
+
+        Appointment newAppt = appts.get(apptIndex);
+        newAppt.setTimeslot(newSlot);
+
+        outputAreaR.appendText("Rescheduled to " + formattedDate + " " + newSlot.toString() + " " + patient.getProfile().getFirstName() + " " + patient.getProfile().getLastName() + " " + patient.getProfile().getDob().toString() + " " + newAppt.getProvider().toString() + "\n");
+    }
+
+
 
     private void showAlertForSchedule(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION); // You can change the type to ERROR, WARNING, etc. as needed
@@ -360,9 +503,6 @@ public class ClinicManagerController implements Initializable {
     private ChoiceBox<String> chooseProvider;
 
     @FXML
-    private Text timeslot;
-
-    @FXML
     private Button loadProvidersButton;
 
     public String getTypeOfAppointment(ToggleGroup radioGroup) {
@@ -383,13 +523,13 @@ public class ClinicManagerController implements Initializable {
 
     private final String[] times = {"9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM"};
 
-    @FXML
-    private Button rescheduleButton;
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         chooseTimeslot.getItems().addAll(times);
+        oldTimeslot.getItems().addAll(times);
+        newTimeslot.getItems().addAll(times);
         outputArea.setEditable(false);
+        outputAreaR.setEditable(false);
         initializeToggleButtons();
         updateProviderList();
         chooseOne.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {

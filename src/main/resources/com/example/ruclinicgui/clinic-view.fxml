@@ -62,8 +62,8 @@
                <content>
                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: a7c2a3;">
                         <children>
-                           <Text layoutX="14.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Appointment Date" />
-                           <Text layoutX="14.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="to be Rescheduled:" />
+                           <Text layoutX="17.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Appointment Date:" />
+                           <Text layoutX="14.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" />
                            <DatePicker fx:id="appointmentDatePickerR" layoutX="129.0" layoutY="27.0" />
                            <Text layoutX="14.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Patient Information:" />
                            <TextField fx:id="fnameR" layoutX="141.0" layoutY="84.0" promptText="enter first name" />
@@ -73,8 +73,8 @@
                            <Text layoutX="307.0" layoutY="168.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Timeslot:" />
                            <ChoiceBox fx:id="oldTimeslot" layoutX="119.0" layoutY="151.0" prefWidth="150.0" />
                            <ChoiceBox fx:id="newTimeslot" layoutX="419.0" layoutY="151.0" prefWidth="150.0" />
-                           <Button fx:id="rescheduleButton" layoutX="279.0" layoutY="209.0" mnemonicParsing="false" text="Reschedule" />
-                           <TextArea fx:id="secondOutputArea" layoutY="254.0" prefHeight="200.0" prefWidth="636.0" promptText="Output Area" />
+                           <Button fx:id="rescheduleButton" layoutX="265.0" layoutY="203.0" mnemonicParsing="false" onAction="#onRescheduleClick" text="Reschedule" />
+                           <TextArea fx:id="outputAreaR" layoutY="254.0" prefHeight="200.0" prefWidth="636.0" promptText="Output Area" />
                         </children></AnchorPane>
                </content>
              </Tab>
@@ -120,13 +120,13 @@
                                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Print Imaging Appointments" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
                                  <Text strokeType="OUTSIDE" strokeWidth="0.0" GridPane.rowIndex="6" />
                                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Print Provider Charges" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
-                                 <Button fx:id="PAButton" onAction = "#onPAClick" mnemonicParsing="false" text="PA" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                                 <Button fx:id="PPButton" onAction = "#onPPClick" mnemonicParsing="false" text="PP" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                                 <Button fx:id="PLButton" onAction = "#onPLClick" mnemonicParsing="false" text="PL" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-                                 <Button fx:id="PSButton" onAction = "#onPSClick" mnemonicParsing="false" text="PS" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-                                 <Button fx:id="POButton" onAction = "#onPOClick" mnemonicParsing="false" text="PO" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
-                                 <Button fx:id="PIButton" onAction = "#onPIClick" mnemonicParsing="false" text="PI" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
-                                 <Button fx:id="PCButton" onAction = "#onPCClick" mnemonicParsing="false" text="PC" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+                                 <Button fx:id="PAButton" mnemonicParsing="false" onAction="#onPAClick" text="PA" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                                 <Button fx:id="PPButton" mnemonicParsing="false" onAction="#onPPClick" text="PP" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                                 <Button fx:id="PLButton" mnemonicParsing="false" onAction="#onPLClick" text="PL" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                                 <Button fx:id="PSButton" mnemonicParsing="false" onAction="#onPSClick" text="PS" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+                                 <Button fx:id="POButton" mnemonicParsing="false" onAction="#onPOClick" text="PO" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+                                 <Button fx:id="PIButton" mnemonicParsing="false" onAction="#onPIClick" text="PI" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+                                 <Button fx:id="PCButton" mnemonicParsing="false" onAction="#onPCClick" text="PC" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
                               </children>
                            </GridPane>
                            <TextArea fx:id="printOutput" layoutY="255.0" prefHeight="190.0" prefWidth="636.0" promptText="Output Area" />
