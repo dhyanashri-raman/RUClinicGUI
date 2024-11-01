@@ -222,56 +222,92 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     private void schedule() {
-        StringBuilder missingFields = new StringBuilder();
-        if (getDateSelected() == null) {
-            missingFields.append("• Appointment Date\n");
-        }
-        if (getTimeslot() == null) {
-            missingFields.append("• Timeslot\n");
-        }
-        if (getPatient() == null) {
-            missingFields.append("• Patient Details\n");
-        }
-        if (getProvider() == null) {
-            missingFields.append("• Provider\n");
-        }
-        if (!missingFields.isEmpty()) {
-            showAlertForSchedule("Missing Information", "Please fill out the following fields:\n" + missingFields.toString());
-        }
-        String selectedDateText = appointmentDatePicker.getEditor().getText();
-        String formattedDate;
-        if (selectedDateText != null && !selectedDateText.isEmpty()) {
-            formattedDate = selectedDateText;
-        } else {
-            return;
-        }
-        Date date = getDateSelected();
-        Timeslot slot = getTimeslot();
-        Person patient = getPatient();
-        Provider provider = getProvider();
-        checkApptDate(formattedDate);
-        if (patient != null) {
-            checkDOB(patient.getProfile().getDob());
-        }
-        if (patient!=null && provider instanceof Doctor) {
-            Doctor doctor = (Doctor) provider;
-            if (methods.identifyAppointment(appts, patient.getProfile(), date, slot) != -1) {
-                showAlertForSchedule("Duplicate Appointment", patient.getProfile().toString() + " already has an appointment at this time.");
+        if (getTypeOfAppointment(chooseOne).equals("D")) {
+            StringBuilder missingFields = new StringBuilder();
+            if (getDateSelected() == null) {
+                missingFields.append("• Appointment Date\n");
+            }
+            if (getTimeslot() == null) {
+                missingFields.append("• Timeslot\n");
+            }
+            if (getPatient() == null) {
+                missingFields.append("• Patient Details\n");
+            }
+            if (getProvider() == null) {
+                missingFields.append("• Provider\n");
+            }
+            if (!missingFields.isEmpty()) {
+                showAlertForSchedule("Missing Information", "Please fill out the following fields:\n" + missingFields.toString());
+            }
+            String selectedDateText = appointmentDatePicker.getEditor().getText();
+            String formattedDate;
+            if (selectedDateText != null && !selectedDateText.isEmpty()) {
+                formattedDate = selectedDateText;
+            } else {
                 return;
             }
-            if (methods.timeslotTaken(appts, doctor, slot, date) != -1 ) {
-                showAlertForSchedule("Timeslot Unavailable", doctor.toString() + " is not available at " + slot.toString() + ".");
-                return;
+            Date date = getDateSelected();
+            Timeslot slot = getTimeslot();
+            Person patient = getPatient();
+            Provider provider = getProvider();
+            checkApptDate(formattedDate);
+            if (patient != null) {
+                checkDOB(patient.getProfile().getDob());
+            }
+            if (patient!=null && provider instanceof Doctor) {
+                Doctor doctor = (Doctor) provider;
+                if (methods.identifyAppointment(appts, patient.getProfile(), date, slot) != -1) {
+                    showAlertForSchedule("Duplicate Appointment", patient.getProfile().toString() + " already has an appointment at this time.");
+                    return;
+                }
+                if (methods.timeslotTaken(appts, doctor, slot, date) != -1 ) {
+                    showAlertForSchedule("Timeslot Unavailable", doctor.toString() + " is not available at " + slot.toString() + ".");
+                    return;
+                }
+            }
+            if (missingFields.length() == 0 && checkApptDate(formattedDate) && slot != null && slot.setTimeslot(slot.toString())
+                    && patient != null && checkDOB(patient.getProfile().getDob()) && provider instanceof Doctor) {
+                Appointment newAppt = new Appointment(date, slot, patient, provider);
+                appts.add(newAppt);
+                outputArea.appendText(formattedDate + " " + slot.toString() + " " + patient.getProfile().toString() + " " + provider.toString() + " booked.\n");
             }
         }
-        if (missingFields.length() == 0 && checkApptDate(formattedDate) && slot != null && slot.setTimeslot(slot.toString())
-                && patient != null && checkDOB(patient.getProfile().getDob()) && provider instanceof Doctor) {
-            Appointment newAppt = new Appointment(date, slot, patient, provider);
-            appts.add(newAppt);
-            outputArea.appendText(formattedDate + " " + slot.toString() + " " + patient.getProfile().toString() + " " + provider.toString() + " booked.\n");
+        else if (getTypeOfAppointment(chooseOne).equals("T")) {
+            // implementation for scheduling imaging appointment
+            // dhyanashri is doing this
+            StringBuilder missingFields = new StringBuilder();
+            if (getDateSelected() == null) {
+                missingFields.append("• Appointment Date\n");
+            }
+            if (getTimeslot() == null) {
+                missingFields.append("• Timeslot\n");
+            }
+            if (getPatient() == null) {
+                missingFields.append("• Patient Details\n");
+            }
+            if (getRoom() == null) {
+                missingFields.append("• Provider\n");
+            }
+            if (!missingFields.isEmpty()) {
+                showAlertForSchedule("Missing Information", "Please fill out the following fields:\n" + missingFields.toString());
+            }
         }
     }
 
+    @FXML
+    private Radiology getRoom() {
+        String roomString = chooseProvider.getValue();
+        if (roomString.equals("XRAY")) {
+            return Radiology.XRAY;
+        }
+        if (roomString.equals("CATSCAN")) {
+            return Radiology.CATSCAN;
+        }
+        if (roomString.equals("ULTRASOUND")) {
+            return Radiology.ULTRASOUND;
+        }
+        return null;
+    }
 
 //    @FXML
 //    private void schedule() {
@@ -440,7 +476,7 @@ public class ClinicManagerController implements Initializable {
         int apptIndex = methods.identifyAppointment(appts, patient.getProfile(), date, oldSlot);
 
         if (apptIndex == -1) {
-            outputAreaR.appendText(formattedDate + " " + oldSlot.toString() + " " + patient.getProfile().getFirstName() + " " + patient.getProfile().getLastName() + " " + patient.getProfile().getDob().toString() + " does not exist.\n");
+            outputAreaR.appendText(formattedDate + " " + oldSlot.toString() + " " + patient.getProfile().getFirstName() + " " + patient.getProfile().getLastName() + " " + patient.getProfile().getDob().toString() + " does not exist.");
             return;
         }
 
