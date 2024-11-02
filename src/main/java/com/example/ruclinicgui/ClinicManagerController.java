@@ -119,15 +119,15 @@ public class ClinicManagerController implements Initializable {
             return false;
         }
         else if (date.isBeforeToday() || date.isToday()) {
-            showAlert("Invalid Appointment Date", "Appointment date: " + input + " is today or a date before today.", Alert.AlertType.WARNING);
+            showAlert("Invalid Appointment Date", "Appointment date: " + input + " is today or a date before today.", Alert.AlertType.ERROR);
             return false;
         }
         else if (date.onWeekend()) {
-            showAlert("Weekend Appointment", "Appointment date: " + input + " is Saturday or Sunday.", Alert.AlertType.WARNING);
+            showAlert("Weekend Appointment", "Appointment date: " + input + " is Saturday or Sunday.", Alert.AlertType.ERROR);
             return false;
         }
         else if (!date.isWithinSixMonths()) {
-            showAlert("Out of Range", "Appointment date: " + input + " is not within six months.", Alert.AlertType.WARNING);
+            showAlert("Out of Range", "Appointment date: " + input + " is not within six months.", Alert.AlertType.ERROR);
             return false;
         }
         return true;
@@ -331,7 +331,6 @@ public class ClinicManagerController implements Initializable {
             Technician currentTech = pointer.getTechnician();
             int techAvailable = methods.identifyImagingAppt(imaging, currentTech, date, timeslot);
             boolean roomFree = methods.isRoomFree(imaging, currentTech, date, timeslot, room);
-
             if (techAvailable == -1 && roomFree) {
                 Technician selectedTech = currentTech;
                 pointer = pointer.getNext();
@@ -379,7 +378,7 @@ public class ClinicManagerController implements Initializable {
         }
         int index = methods.identifyImagingAppt2(imagingAppts, patient.getProfile(), date, slot);
         if (index != -1) {
-            showAlertForSchedule("Duplicate Appointment", "Existing appointment at this timeslot for " + patient.getProfile().toString());
+            showAlertForSchedule("Duplicate Appointment", patient.getProfile().toString() + " has an existing appointment at the same time.");
             return;
         }
         Technician technician = techAvailable(imagingAppts, date, slot, room);
@@ -505,10 +504,6 @@ public class ClinicManagerController implements Initializable {
         Date date = getDateSelected();
         Timeslot slot = getTimeslot();
         Person patient = getPatient();
-        if (!slot.setTimeslot(slot.toString())) {
-            showAlertForSchedule("Invalid Timeslot", slot.toString() + " is not a valid timeslot.");
-            return;
-        }
         int inptApp = methods.identifyAppointment(appts, patient.getProfile(), date, slot);
         if (inptApp!=-1)
         {
