@@ -906,7 +906,7 @@ public class ClinicManagerController implements Initializable {
         if (!file.exists()) {
             return;
         }
-        try (Scanner scanner = new Scanner(file)) { // Using try-with-resources to automatically close the scanner
+        try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] splittedLine = line.split("  ");

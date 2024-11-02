@@ -3,6 +3,7 @@ package com.example.ruclinicgui.clinic.src;
 /**
  * The clinic.src.Technician class represents a technician at the clinic.
  * Technicians have a rate per visit and can be compared based on their profiles and rates.
+ * @author Nithya Konduru, Dhyanashri Raman
  */
 public class Technician extends Provider {
     private int ratePerVisit;

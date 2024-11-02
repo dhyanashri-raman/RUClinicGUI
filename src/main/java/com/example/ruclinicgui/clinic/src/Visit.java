@@ -3,6 +3,7 @@ package com.example.ruclinicgui.clinic.src;
 /**
  * Represents a visit associated with an appointment.
  * Each visit can reference the next visit in a linked list structure.
+ * @author Nithya Konduru, Dhyanahsri
  */
 public class Visit {
     private Appointment appointment;

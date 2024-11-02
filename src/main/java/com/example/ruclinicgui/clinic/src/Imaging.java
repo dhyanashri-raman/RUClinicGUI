@@ -6,6 +6,7 @@ import com.example.ruclinicgui.clinic.src.util.Date;
 /**
  * Represents an imaging appointment at the clinic.
  * This appointment includes details such as the date, timeslot, patient, provider, and the radiology room.
+ * @author Nithya Konduru, Dhyanashri Raman
  */
 public class Imaging extends Appointment {
     private Radiology room;

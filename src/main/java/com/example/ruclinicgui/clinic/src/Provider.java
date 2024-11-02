@@ -3,6 +3,7 @@ package com.example.ruclinicgui.clinic.src;
 /**
  * The abstract clinic.src.Provider class represents a provider at the clinic, including their location.
  * Providers can either be doctors or technicians. This class extends the Person class.
+ * @author Nithya Konduru, Dhyanashri Raman
  */
 public abstract class Provider extends Person {
     private Location location;

@@ -4,7 +4,21 @@ package com.example.ruclinicgui.clinic.src.util;
 import com.example.ruclinicgui.clinic.src.Appointment;
 import com.example.ruclinicgui.clinic.src.Provider;
 
+/**
+ * This class provides sorting functionality for various types of lists,
+ * specifically focusing on sorting appointments and providers.
+ * @author Nithya Konduru, Dhyanashri Raman
+ * @param <E> The type of elements to be sorted, expected to be a subtype of Appointment.
+ */
 public class Sort<E> {
+    /**
+     * Swaps two appointments in the list at specified indices.
+     *
+     * @param appointments The list of appointments.
+     * @param i The index of the first appointment to swap.
+     * @param j The index of the second appointment to swap.
+     */
+
     private void swapAppointments(List<E> appointments, int i, int j) {
         E temp = appointments.get(i);
         E second = appointments.get(j);
@@ -14,6 +28,11 @@ public class Sort<E> {
         }
     }
 
+    /**
+     * Sorts a list of appointments in ascending order based on their attributes.
+     *
+     * @param list The list of appointments to be sorted.
+     */
     public void sortByAppointment(List<E> list) {
         for (int i = 0; i < list.size() - 1; i++) {
             for (int j = 0; j < list.size() - i - 1; j++) {
@@ -27,6 +46,12 @@ public class Sort<E> {
             }
         }
     }
+
+    /**
+     * Sorts a list of providers in ascending order based on their last names.
+     *
+     * @param list The list of providers to be sorted.
+     */
     public void sortByProvider(List<Provider> list) {
         int n = list.size();
         for (int i = 0; i < n - 1; i++) {
@@ -42,6 +67,12 @@ public class Sort<E> {
         }
     }
 
+    /**
+     * Sorts a list of providers for printing purposes,
+     * first by last name, then by first name, and finally by date of birth.
+     *
+     * @param list The list of providers to be sorted.
+     */
     public void sortByProviderForPrint(List<Provider> list) {
         int n = list.size();
         for (int i = 0; i < n - 1; i++) {
@@ -76,6 +107,11 @@ public class Sort<E> {
         }
     }
 
+    /**
+     * Sorts a list of appointments in ascending order based on the patients associated with them.
+     *
+     * @param list The list of appointments to be sorted.
+     */
     public void sortByPatient(List<E> list)
     {
         for (int i = 0; i < list.size() - 1; i++) {
@@ -91,6 +127,11 @@ public class Sort<E> {
         }
     }
 
+    /**
+     * Sorts a list of appointments in ascending order based on their locations.
+     *
+     * @param list The list of appointments to be sorted.
+     */
     public void sortByLocation(List<E> list)
     {
         for (int i = 0; i < list.size() - 1; i++) {
@@ -106,6 +147,11 @@ public class Sort<E> {
         }
     }
 
+    /**
+     * Sorts a list of appointments in ascending order based on their profiles.
+     *
+     * @param list The list of appointments to be sorted.
+     */
     public void sortByProfile(List<E> list)
     {
         for (int i = 0; i < list.size() - 1; i++) {

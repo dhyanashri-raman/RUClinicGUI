@@ -3,6 +3,7 @@ package com.example.ruclinicgui.clinic.src;
 /**
  * Represents a patient at the clinic, inheriting from the Person class.
  * A patient includes visit information in addition to their profile.
+ * @author Nithya Konduru, Dhyanashri Raman
  */
 public class Patient extends Person {
     private Visit visit;

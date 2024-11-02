@@ -4,6 +4,7 @@ package com.example.ruclinicgui.clinic.src;
  * The clinic.src.Specialty enum defines different medical specialties, each
  * associated with a specific charge amount. It provides a way to
  * categorize providers based on their specialization.
+ * @author Nithya Konduru, Dhyanashri Raman
  */
 public enum Specialty {
     Family(250),

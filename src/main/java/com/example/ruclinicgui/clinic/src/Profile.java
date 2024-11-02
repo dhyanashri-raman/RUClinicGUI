@@ -5,6 +5,7 @@ import com.example.ruclinicgui.clinic.src.util.Date;
  * The clinic.src.Profile class represents a patient's profile, including their first name,
  * last name, and date of birth. It implements the Comparable interface to allow
  * profiles to be compared based on their attributes.
+ * @author Nithya Konduru, Dhyanashri Raman
  */
 public class Profile implements Comparable<Profile> {
     private String fname;

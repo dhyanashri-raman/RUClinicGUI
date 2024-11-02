@@ -3,6 +3,7 @@ package com.example.ruclinicgui.clinic.src;
 /**
  * Represents a person in the clinic system, which could be a patient or a provider.
  * Each person has an associated profile, and this class implements comparison based on the profile.
+ * @author Nithya Konduru, Dhyanashri Raman
  */
 public class Person implements Comparable<Person> {
 
@@ -75,9 +76,9 @@ public class Person implements Comparable<Person> {
      */
     public Provider getProvider() {
         if (this instanceof Provider) {
-            return (Provider) this; // Safely cast to Provider
+            return (Provider) this;
         }
-        return null; // Return null if the person is not a Provider
+        return null;
     }
 
     /**

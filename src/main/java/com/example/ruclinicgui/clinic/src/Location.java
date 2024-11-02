@@ -3,6 +3,7 @@ package com.example.ruclinicgui.clinic.src;
 /**
  * The clinic.src.Location enum represents various geographical locations along with their corresponding
  * counties and ZIP codes. Each location is defined with a name, county, and ZIP code.
+ * @author Nithya Konduru, Dhyanashri Raman
  */
 public enum Location {
     Bridgewater("Somerset", "08888"),

@@ -4,6 +4,7 @@ package com.example.ruclinicgui.clinic.src;
  * The clinic.src.Timeslot class represents a specific time slot for appointments,
  * using hours and minutes. This class allows setting times based on predefined
  * slots and can compare and check equality between time slots.
+ * @author Nithya Konduru, Dhyanashri Raman
  */
 public class Timeslot implements Comparable<Timeslot> {
     private int hour;
@@ -84,13 +85,10 @@ public class Timeslot implements Comparable<Timeslot> {
     public String toString() {
         String minuteString = String.format("%02d", this.minute);
         String period = (this.hour < 12) ? "AM" : "PM";
-
-        // Convert the hour to 12-hour format
         int displayHour = this.hour % 12;
         if (displayHour == 0) {
-            displayHour = 12; // 0 hours should be displayed as 12 AM/PM
+            displayHour = 12;
         }
-
         return displayHour + ":" + minuteString + " " + period;
     }
 }

@@ -138,7 +138,6 @@ public class Appointment implements Comparable<Appointment> {
          */
         @Override
         public String toString() {
-                // Example format: "10/30/2024 4:00 PM Jane Doe 5/1/1996 [RACHAEL LIM 11/30/1975, BRIDGEWATER, Somerset 08807][PEDIATRICIAN, #23] booked."
                 return this.provider.toString();
         }
 

@@ -3,6 +3,7 @@ package com.example.ruclinicgui.clinic.src;
 /**
  * Represents a doctor who is a provider at the clinic.
  * Each doctor has a specialty and a National Provider Identifier (NPI).
+ * @author Nithya Konduru, Dhyanashri Raman
  */
 public class Doctor extends Provider {
     private Specialty specialty;
