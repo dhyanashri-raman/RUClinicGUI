@@ -76,8 +76,6 @@ public class ClinicManagerController implements Initializable {
 
     public boolean checkApptDate(String input) {
         Date date = stringToDate(input);
-
-        // Check if the date is valid
         if (!date.isValidDate()) {
             showAlert("Invalid Date", "Appointment date: " + input + " is not a valid calendar date.", Alert.AlertType.ERROR);
             return false;
@@ -94,7 +92,6 @@ public class ClinicManagerController implements Initializable {
             showAlert("Out of Range", "Appointment date: " + input + " is not within six months.", Alert.AlertType.WARNING);
             return false;
         }
-
         return true;
     }
 
@@ -147,9 +144,6 @@ public class ClinicManagerController implements Initializable {
         int day = Integer.parseInt(dateParts[1]);
         int year = Integer.parseInt(dateParts[2]);
         Date date = new Date(year, month, day);
-        if (!checkDOB(date)) {
-            return null;
-        }
         Profile patientProfile = new Profile(fname.getText(), lname.getText(), date);
         return new Person(patientProfile);
     }
@@ -276,7 +270,15 @@ public class ClinicManagerController implements Initializable {
         Timeslot slot = getTimeslot();
         Person patient = getPatient();
         String imagingType = chooseProvider.getValue();
-        if (!checkApptDate(date.toString()) || !checkDOB(patient.getProfile().getDob())) {
+        boolean apptDateValid = true;
+        boolean dobValid = true;
+        if (date != null) {
+            apptDateValid = checkApptDate(date.toString());
+        }
+        if (patient != null) {
+            dobValid = checkDOB(patient.getProfile().getDob());
+        }
+        if (!apptDateValid || !dobValid) {
             return;
         }
         Radiology room = setRadioRoom(imagingType);
@@ -330,9 +332,13 @@ public class ClinicManagerController implements Initializable {
         Timeslot slot = getTimeslot();
         Person patient = getPatient();
         Provider provider = getProvider();
-        checkApptDate(formattedDate);
+        boolean apptDateValid = true;
+        boolean dobValid = true;
+        if (formattedDate !=null) {
+            apptDateValid = checkApptDate(formattedDate);
+        }
         if (patient != null) {
-            checkDOB(patient.getProfile().getDob());
+            dobValid = checkDOB(patient.getProfile().getDob());
         }
         if (patient!=null && provider instanceof Doctor) {
             Doctor doctor = (Doctor) provider;
@@ -345,8 +351,8 @@ public class ClinicManagerController implements Initializable {
                 return;
             }
         }
-        if (missingFields.isEmpty() && checkApptDate(formattedDate) && slot != null && slot.setTimeslot(slot.toString())
-                && patient != null && checkDOB(patient.getProfile().getDob()) && provider instanceof Doctor) {
+        if (missingFields.isEmpty() && apptDateValid && slot != null && slot.setTimeslot(slot.toString())
+                && patient != null && dobValid && provider instanceof Doctor) {
             Appointment newAppt = new Appointment(date, slot, patient, provider);
             appts.add(newAppt);
             outputArea.appendText(formattedDate + " " + slot.toString() + " " + patient.getProfile().toString() + " " + provider.toString() + " booked.\n");
