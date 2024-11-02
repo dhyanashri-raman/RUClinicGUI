@@ -63,7 +63,8 @@ public class ClinicManagerController implements Initializable {
      */
     @FXML
     private Date getDateSelected() {
-        if (appointmentDatePicker.getValue() == null) {
+        String date = appointmentDatePicker.getValue().toString();
+        if (appointmentDatePicker.getValue() == null || date.isEmpty()) {
             return null;
         }
         String[] dateParts = appointmentDatePicker.getEditor().getText().split("/");
@@ -361,7 +362,6 @@ public class ClinicManagerController implements Initializable {
         if (chooseProvider.getValue() == null) missingFields.append("• Imaging Type\n");
         if (!missingFields.isEmpty()) {
             showAlertForSchedule("Missing Information", "Please fill out the following fields:\n" + missingFields.toString());
-            return;
         }
         Date date = getDateSelected();
         Timeslot slot = getTimeslot();
