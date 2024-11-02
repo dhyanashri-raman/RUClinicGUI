@@ -144,7 +144,7 @@ public class ClinicManagerController implements Initializable {
         int day = Integer.parseInt(dateParts[1]);
         int year = Integer.parseInt(dateParts[2]);
         Date date = new Date(year, month, day);
-        Profile patientProfile = new Profile(fname.getText(), lname.getText(), date);
+        Profile patientProfile = new Profile(fname.getText().trim(), lname.getText().trim(), date);
         return new Person(patientProfile);
     }
 
@@ -347,7 +347,7 @@ public class ClinicManagerController implements Initializable {
         if (patient!=null && provider instanceof Doctor) {
             Doctor doctor = (Doctor) provider;
             if (methods.identifyAppointment(appts, patient.getProfile(), date, slot) != -1) {
-                showAlertForSchedule("Duplicate Appointment", patient.getProfile().toString() + " already has an appointment at this time.");
+                showAlertForSchedule("Duplicate Appointment", patient.getProfile().toString() + " has an existing appointment at the same time.");
                 return;
             }
             if (methods.timeslotTaken(appts, doctor, slot, date) != -1 ) {
@@ -816,13 +816,10 @@ public class ClinicManagerController implements Initializable {
     @FXML
     private TableColumn<Location, String> zipColumn;
 
-
-
     public void loadProviders(File file) {
         if (!file.exists()) {
             return;
         }
-
         try (Scanner scanner = new Scanner(file)) { // Using try-with-resources to automatically close the scanner
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();

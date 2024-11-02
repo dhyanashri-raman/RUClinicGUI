@@ -71,9 +71,13 @@ public class Appointment implements Comparable<Appointment> {
          * @return     An integer representing the comparison result based on patient information.
          */
         public int compareByPatient(Appointment appt) {
-                int lastNameComparison = this.patient.getProfile().getLastName().compareToIgnoreCase(appt.patient.getProfile().getLastName());
+                String firstName1 = this.patient.getProfile().getFirstName().trim();
+                String lastName1 = this.patient.getProfile().getLastName().trim();
+                String firstName2 = appt.patient.getProfile().getFirstName().trim();
+                String lastName2 = appt.patient.getProfile().getLastName().trim();
+                int lastNameComparison = lastName1.compareToIgnoreCase(lastName2);
                 if (lastNameComparison == 0) {
-                        int firstNameComparison = this.patient.getProfile().getFirstName().compareToIgnoreCase(appt.patient.getProfile().getFirstName());
+                        int firstNameComparison = firstName1.compareToIgnoreCase(firstName2);
                         if (firstNameComparison == 0) {
                                 int dobComparison = this.patient.getProfile().getDob().compareTo(appt.patient.getProfile().getDob());
                                 if (dobComparison == 0) {
