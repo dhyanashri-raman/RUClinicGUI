@@ -193,6 +193,14 @@ public class ClinicManagerController implements Initializable {
         if (dateParts.length != 3) {
             return null;
         }
+        String firstName = fname.getText();
+        String lastName = lname.getText();
+        if(firstName.equals(null)){
+            return null;
+        }
+        if(lastName.equals(null)){
+            return null;
+        }
         int month = Integer.parseInt(dateParts[0]);
         int day = Integer.parseInt(dateParts[1]);
         int year = Integer.parseInt(dateParts[2]);
