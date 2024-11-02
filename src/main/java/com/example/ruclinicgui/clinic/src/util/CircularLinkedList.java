@@ -2,9 +2,10 @@ package com.example.ruclinicgui.clinic.src.util;
 import com.example.ruclinicgui.clinic.src.Technician;
 
 /**
- * The clinic.src.util.CircularLinkedList class represents a circular linked list of technicians.
+ * The CircularLinkedList class represents a circular linked list of technicians.
  * It allows for adding, removing, and displaying technicians in a circular manner.
  * The head and tail nodes are linked to each other to form a circular structure.
+ * @author Nithya Konduru, Dhyanashri Raman
  */
 public class CircularLinkedList {
     private Node head;

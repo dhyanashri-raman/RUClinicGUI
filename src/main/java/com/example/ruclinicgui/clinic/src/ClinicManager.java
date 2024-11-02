@@ -1,6 +1,3 @@
-/* @@author Dhyanashri Konduru*/
-/* @@author Nithya Konduru */
-
 package com.example.ruclinicgui.clinic.src;
 
 import com.example.ruclinicgui.clinic.src.util.*;
