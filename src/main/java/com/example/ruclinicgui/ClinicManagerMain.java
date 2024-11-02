@@ -14,7 +14,7 @@ public class ClinicManagerMain extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("clinic-view.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
-        primaryStage.setTitle("Clinic Manager");
+        primaryStage.setTitle("Appointment Scheduler");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

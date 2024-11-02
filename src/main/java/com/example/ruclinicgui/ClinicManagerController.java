@@ -674,7 +674,12 @@ public class ClinicManagerController implements Initializable {
 
     @FXML
     protected void onPCClick() {
-        printOutput.appendText(methods.printProviderCharges(appts, technicians));
+        if(appts.size() == 0){
+            printOutput.appendText("\nThere are no appointments in the system." + "\n");
+        }
+        else{
+            printOutput.appendText(methods.printProviderCharges(appts, technicians));
+        }
     }
 
     @FXML

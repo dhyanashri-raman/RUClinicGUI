@@ -50,7 +50,7 @@ public class ListMethods<E> extends List{
         sort.sortByAppointment(objects);
         String appointmentsOutput = printAppointments(objects);
         output.append(appointmentsOutput);
-        output.append("** end of list **");
+        output.append("** end of list **\n");
         return output.toString();
     }
 
@@ -176,7 +176,7 @@ public class ListMethods<E> extends List{
      */
     public String printAllCharge(List<E> objects) {
         if (objects.size() == 0) {
-            return "There are no appointments in the system.\n";
+            return "\nThere are no appointments in the system.\n";
         }
 
         StringBuilder result = new StringBuilder();
@@ -248,9 +248,8 @@ public class ListMethods<E> extends List{
         }
 
         sort.sortByProviderForPrint(providers);
-        int counter = 0;
         int charge;
-
+        int counter = 1;
         for (int j = 0; j < providers.size(); j++) {
             charge = 0;
             currProvider = providers.get(j);
@@ -266,10 +265,13 @@ public class ListMethods<E> extends List{
                     }
                 }
             }
-            counter++;
-            result.append("(").append(counter).append(") ")
-                    .append(currProvider.getProfile().toString())
-                    .append(" [credit amount: $").append(charge).append(".00] \n");
+            if(charge != 0){
+                result.append("(").append(counter).append(") ")
+                        .append(currProvider.getProfile().toString())
+                        .append(" [credit amount: $").append(charge).append(".00] \n");
+                counter++;
+            }
+
         }
 
         result.append("** end of list **\n");
