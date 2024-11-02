@@ -296,6 +296,10 @@ public class ClinicManagerController implements Initializable {
             showAlertForSchedule("No Technician Available", "No available technician for " + imagingType + " at " + slot.toString());
             return;
         }
+        if(!missingFields.isEmpty() && !loadProvidersButton.isDisabled())
+        {
+            showAlert("Load Provider's Error", "The providers have not been loaded.", Alert.AlertType.WARNING);
+        }
         Imaging newImageAppt = new Imaging(date, slot, patient, technician, room);
         appts.add(newImageAppt);
         imagingAppts.add(newImageAppt);
@@ -350,6 +354,10 @@ public class ClinicManagerController implements Initializable {
                 showAlertForSchedule("Timeslot Unavailable", doctor.toString() + " is not available at " + slot.toString() + ".");
                 return;
             }
+        }
+        if(!missingFields.isEmpty() && !loadProvidersButton.isDisabled())
+        {
+            showAlert("Load Provider's Error", "The providers have not been loaded.", Alert.AlertType.WARNING);
         }
         if (missingFields.isEmpty() && apptDateValid && slot != null && slot.setTimeslot(slot.toString())
                 && patient != null && dobValid && provider instanceof Doctor) {
