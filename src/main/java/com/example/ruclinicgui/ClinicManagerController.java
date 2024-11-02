@@ -195,10 +195,7 @@ public class ClinicManagerController implements Initializable {
         }
         String firstName = fname.getText();
         String lastName = lname.getText();
-        if(firstName.equals(null)){
-            return null;
-        }
-        if(lastName.equals(null)){
+        if (firstName == null || firstName.isEmpty() || lastName == null || lastName.isEmpty()) {
             return null;
         }
         int month = Integer.parseInt(dateParts[0]);
@@ -336,15 +333,17 @@ public class ClinicManagerController implements Initializable {
         }
         Node start = pointer;
         do {
-            Technician currentTech = pointer.getTechnician();
-            int techAvailable = methods.identifyImagingAppt(imaging, currentTech, date, timeslot);
-            boolean roomFree = methods.isRoomFree(imaging, currentTech, date, timeslot, room);
-            if (techAvailable == -1 && roomFree) {
-                Technician selectedTech = currentTech;
+            if (pointer!=null) {
+                Technician currentTech = pointer.getTechnician();
+                int techAvailable = methods.identifyImagingAppt(imaging, currentTech, date, timeslot);
+                boolean roomFree = methods.isRoomFree(imaging, currentTech, date, timeslot, room);
+                if (techAvailable == -1 && roomFree) {
+                    Technician selectedTech = currentTech;
+                    pointer = pointer.getNext();
+                    return selectedTech;
+                }
                 pointer = pointer.getNext();
-                return selectedTech;
             }
-            pointer = pointer.getNext();
         } while (pointer != start);
         return null;
     }
