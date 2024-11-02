@@ -345,7 +345,7 @@ public class ClinicManagerController implements Initializable {
                 return;
             }
         }
-        if (missingFields.length() == 0 && checkApptDate(formattedDate) && slot != null && slot.setTimeslot(slot.toString())
+        if (missingFields.isEmpty() && checkApptDate(formattedDate) && slot != null && slot.setTimeslot(slot.toString())
                 && patient != null && checkDOB(patient.getProfile().getDob()) && provider instanceof Doctor) {
             Appointment newAppt = new Appointment(date, slot, patient, provider);
             appts.add(newAppt);
@@ -752,6 +752,20 @@ public class ClinicManagerController implements Initializable {
         else if(getTypeOfAppointment(chooseOne).equals("T")){
             scheduleImaging();
         }
+        else if (chooseOne.getSelectedToggle() == null) {
+            showAlertForToggle("Selection Required", "Please select a type of appointment to continue");
+        }
+    }
+
+    private void showAlertForToggle(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.NONE);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+
+        // Add an OK button to close the alert
+        alert.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.OK);
+        alert.showAndWait();
     }
 
     @FXML
@@ -787,7 +801,6 @@ public class ClinicManagerController implements Initializable {
 
     public void loadProviders(File file) {
         if (!file.exists()) {
-            System.out.println("File not found: " + file.getAbsolutePath());
             return;
         }
 

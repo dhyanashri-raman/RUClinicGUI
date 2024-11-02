@@ -87,7 +87,6 @@ public class CircularLinkedList {
      */
     public Technician removeTechnician() {
         if (head == null) {
-            System.out.println("clinic.src.util.List is empty. No technician to remove.");
             return null;
         }
 
