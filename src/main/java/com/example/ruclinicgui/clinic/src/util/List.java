@@ -3,10 +3,10 @@ package com.example.ruclinicgui.clinic.src.util;
 import java.util.Iterator;
 
 /**
- * The clinic.src.util.List class is a generic container for storing elements of type E.
+ * The List class is a generic container for storing elements of type E.
  * It provides basic list operations such as adding, removing, and checking for elements.
  * It also implements the Iterable interface to allow for iteration over its elements.
- *
+ * @author Nithya Konduru, Dhyanashri Raman
  * @param <E> The type of elements in this list
  */
 public class List<E> implements Iterable<E> {

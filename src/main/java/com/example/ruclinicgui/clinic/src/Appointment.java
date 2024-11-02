@@ -2,11 +2,10 @@ package com.example.ruclinicgui.clinic.src;
 
 import com.example.ruclinicgui.clinic.src.util.Date;
 
-/* @@author Dhyanashri Konduru*/
-/* @@author Nithya Konduru */
 /**
  * Represents an appointment between a patient and a provider, scheduled on a specific date and timeslot.
  * The appointment can be compared based on various factors such as date, timeslot, patient, provider, and location.
+ * @author Nithya Konduru, Dhyanashri Raman
  */
 public class Appointment implements Comparable<Appointment> {
         protected Date date;

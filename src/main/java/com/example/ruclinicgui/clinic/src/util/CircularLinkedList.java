@@ -134,6 +134,13 @@ public class CircularLinkedList {
         return result.toString();
     }
 
+    /**
+     * Retrieves the current size value.
+     * This method returns the size of the relevant data structure or
+     * object being managed.
+     *
+     * @return the current size
+     */
     public int getSize()
     {
         return size;

@@ -7,6 +7,7 @@ import java.util.Calendar;
  * It provides methods to validate the date, check its properties,
  * and compare it with other dates. This class implements the Comparable
  * interface to allow for date comparisons.
+ * @author Nithya Konduru, Dhyanashri Raman
  */
 public class Date implements Comparable<Date> {
     private int year;
