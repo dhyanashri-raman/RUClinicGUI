@@ -182,7 +182,7 @@ public class ListMethods<E> extends List{
         StringBuilder result = new StringBuilder();
         result.append("\n** Billing statement ordered by patient **\n");
 
-        sort.sortByProfile(objects);
+        sort.sortByPatient(objects);
         DecimalFormat formatDec = new DecimalFormat("$#,##0.00");
         int counter = 1;
         Profile currentProfile = null;

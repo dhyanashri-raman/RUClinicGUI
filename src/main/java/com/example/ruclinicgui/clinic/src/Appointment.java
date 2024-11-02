@@ -71,9 +71,9 @@ public class Appointment implements Comparable<Appointment> {
          * @return     An integer representing the comparison result based on patient information.
          */
         public int compareByPatient(Appointment appt) {
-                int lastNameComparison = this.patient.getProfile().getLastName().compareTo(appt.patient.getProfile().getLastName());
+                int lastNameComparison = this.patient.getProfile().getLastName().compareToIgnoreCase(appt.patient.getProfile().getLastName());
                 if (lastNameComparison == 0) {
-                        int firstNameComparison = this.patient.getProfile().getFirstName().compareTo(appt.patient.getProfile().getFirstName());
+                        int firstNameComparison = this.patient.getProfile().getFirstName().compareToIgnoreCase(appt.patient.getProfile().getFirstName());
                         if (firstNameComparison == 0) {
                                 int dobComparison = this.patient.getProfile().getDob().compareTo(appt.patient.getProfile().getDob());
                                 if (dobComparison == 0) {
