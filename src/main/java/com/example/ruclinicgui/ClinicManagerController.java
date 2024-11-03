@@ -609,17 +609,26 @@ public class ClinicManagerController implements Initializable {
      */
     @FXML
     protected void reschedule() {
+        if(appts.size() == 0)
+        {
+            showAlert("Invalid Reschedule", "No appointments scheduled.", Alert.AlertType.WARNING);
+            return;
+        }
         StringBuilder missingFields = new StringBuilder();
-        if (getDateSelectedR() == null) {
+        Date date = getDateSelectedR();
+        Timeslot oldSlot = getOldTimeslot();
+        Timeslot newSlot = getNewTimeslot();
+        Person patient = getPatientR();
+        if (date == null) {
             missingFields.append("• Appointment Date\n");
         }
-        if (getOldTimeslot() == null) {
+        if (oldSlot == null) {
             missingFields.append("• Old Timeslot\n");
         }
-        if (getNewTimeslot() == null) {
+        if (newSlot == null) {
             missingFields.append("• New Timeslot\n");
         }
-        if (getPatient() == null) {
+        if (patient == null) {
             missingFields.append("• Patient Details\n");
         }
         if (!missingFields.isEmpty()) {
@@ -632,37 +641,47 @@ public class ClinicManagerController implements Initializable {
         } else {
             return;
         }
-        Date date = getDateSelectedR();
-        Timeslot oldSlot = getOldTimeslot();
-        Timeslot newSlot = getNewTimeslot();
-        Person patient = getPatientR();
+
         checkApptDate(formattedDate);
         if (patient != null) {
             checkDOB(patient.getProfile().getDob());
         }
-        int apptIndex = methods.identifyAppointment(appts, patient.getProfile(), date, oldSlot);
+        int apptIndex = -3;
+        if(patient != null) {
+            apptIndex = methods.identifyAppointment(appts, patient.getProfile(), date, oldSlot);
 
-        if (apptIndex == -1) {
+        }
+
+        if (apptIndex == -1 && patient != null) {
             outputAreaR.appendText(formattedDate + " " + oldSlot.toString() + " " + patient.getProfile().getFirstName() + " " + patient.getProfile().getLastName() + " " + patient.getProfile().getDob().toString() + " does not exist.");
             return;
         }
-        int apptIndex2 = methods.identifyAppointment(appts, patient.getProfile(), date, newSlot);
-        if (apptIndex2 !=-1) {
+        int apptIndex2 = -3;
+        if(patient != null){
+            apptIndex2 = methods.identifyAppointment(appts, patient.getProfile(), date, newSlot);
+        }
+        if (apptIndex2 !=-1 && patient != null) {
             Appointment appointment = appts.get(apptIndex2);
             outputAreaR.appendText("\n" + patient.getProfile().toString() + " has an existing appointment at " + appointment.getDate().toString() + " " + newSlot.toString() + "\n");
             return;
         }
-        Appointment appointment = appts.get(apptIndex);
-        Provider provider = (Provider) appointment.getProvider();
+        Appointment appointment = null;
+        Provider provider = null;
+        if(patient != null){
+             appointment = appts.get(apptIndex);
+             provider = (Provider) appointment.getProvider();
+        }
+
         if (methods.timeslotTaken(appts, provider, newSlot, date) != -1) {
             outputAreaR.appendText("\n" + provider.toString() + " is not available at " + newTimeslot.getValue() + "\n");
             return;
         }
 
-        Appointment newAppt = appts.get(apptIndex);
-        newAppt.setTimeslot(newSlot);
-
-        outputAreaR.appendText("\nRescheduled to " + formattedDate + " " + newSlot.toString() + " " + patient.getProfile().getFirstName() + " " + patient.getProfile().getLastName() + " " + patient.getProfile().getDob().toString() + " " + newAppt.getProvider().toString() + "\n");
+        if(patient != null){
+            Appointment newAppt = appts.get(apptIndex);
+            newAppt.setTimeslot(newSlot);
+            outputAreaR.appendText("\nRescheduled to " + formattedDate + " " + newSlot.toString() + " " + patient.getProfile().getFirstName() + " " + patient.getProfile().getLastName() + " " + patient.getProfile().getDob().toString() + " " + newAppt.getProvider().toString() + "\n");
+        }
     }
 
     /**
