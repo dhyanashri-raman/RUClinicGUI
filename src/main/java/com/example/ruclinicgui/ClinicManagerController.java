@@ -38,6 +38,10 @@ public class ClinicManagerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         chooseTimeslot.getItems().addAll(times);
+        appointmentDatePickerR.setEditable(false);
+        appointmentDatePicker.setEditable(false);
+        dobDatePicker.setEditable(false);
+        dobDatePickerR.setEditable(false);
         oldTimeslot.getItems().addAll(times);
         newTimeslot.getItems().addAll(times);
         outputArea.setEditable(false);
@@ -63,7 +67,10 @@ public class ClinicManagerController implements Initializable {
      */
     @FXML
     private Date getDateSelected() {
-        String date = appointmentDatePicker.getValue().toString();
+        String date = "";
+        if(appointmentDatePicker.getValue() != null){
+             date = appointmentDatePicker.getValue().toString();
+        }
         if (appointmentDatePicker.getValue() == null || date.isEmpty()) {
             return null;
         }
@@ -89,7 +96,10 @@ public class ClinicManagerController implements Initializable {
      */
     @FXML
     private Date getDateSelectedR() {
-        String date = appointmentDatePickerR.getValue().toString();
+        String date = "";
+        if(appointmentDatePickerR.getValue() != null){
+            date = appointmentDatePickerR.getValue().toString();
+        }
         if (date == null || date.isEmpty()) {
             return null;
         }
@@ -187,7 +197,10 @@ public class ClinicManagerController implements Initializable {
      */
     @FXML
     private Person getPatient() {
-        String selectedDateText = dobDatePicker.getEditor().getText();
+        String selectedDateText = "";
+        if(dobDatePicker.getEditor().getText() != null) {
+            selectedDateText = dobDatePicker.getEditor().getText();
+        }
         if (selectedDateText == null || selectedDateText.isEmpty()) {
             return null;
         }
@@ -214,7 +227,10 @@ public class ClinicManagerController implements Initializable {
      */
     @FXML
     private Person getPatientR() {
-        String selectedDateText = dobDatePickerR.getEditor().getText();
+        String selectedDateText = "";
+        if(dobDatePickerR.getEditor().getText() != null){
+            selectedDateText = dobDatePickerR.getEditor().getText();
+        }
         if (selectedDateText == null || selectedDateText.isEmpty()) {
             return null;
         }
@@ -362,9 +378,15 @@ public class ClinicManagerController implements Initializable {
     @FXML
     private void scheduleImaging() {
         StringBuilder missingFields = new StringBuilder();
-        if (getDateSelected() == null) missingFields.append("• Appointment Date\n");
-        if (getTimeslot() == null) missingFields.append("• Timeslot\n");
-        if (getPatient() == null) missingFields.append("• Patient Details\n");
+        if (getDateSelected() == null) {
+            missingFields.append("• Appointment Date\n");
+        }
+        if (getTimeslot() == null) {
+            missingFields.append("• Timeslot\n");
+        }
+        if (getPatient() == null) {
+            missingFields.append("• Patient Details\n");
+        }
         if (chooseProvider.getValue() == null) missingFields.append("• Imaging Type\n");
         if (!missingFields.isEmpty()) {
             showAlertForSchedule("Missing Information", "Please fill out the following fields:\n" + missingFields.toString());
@@ -389,8 +411,11 @@ public class ClinicManagerController implements Initializable {
             showAlertForSchedule("Invalid Imaging Type", imagingType + " is not a valid imaging service.");
             return;
         }
-        int index = methods.identifyImagingAppt2(imagingAppts, patient.getProfile(), date, slot);
-        if (index != -1) {
+        int index = -3;
+        if(patient != null){
+            index = methods.identifyImagingAppt2(imagingAppts, patient.getProfile(), date, slot);
+        }
+        if (patient != null && index != -1) {
             showAlertForSchedule("Duplicate Appointment", patient.getProfile().toString() + " has an existing appointment at the same time.");
             return;
         }
@@ -403,11 +428,15 @@ public class ClinicManagerController implements Initializable {
         {
             showAlert("Load Provider's Error", "The providers have not been loaded.", Alert.AlertType.WARNING);
         }
-        Imaging newImageAppt = new Imaging(date, slot, patient, technician, room);
-        appts.add(newImageAppt);
-        imagingAppts.add(newImageAppt);
-        outputArea.appendText(date.toString() + " " + slot.toString() + " " + patient.getProfile().toString()
-                + " with " + technician.toString() + " in " + room.toString() + " booked.\n");
+
+        if(patient != null){
+            Imaging newImageAppt = new Imaging(date, slot, patient, technician, room);
+            appts.add(newImageAppt);
+            imagingAppts.add(newImageAppt);
+            outputArea.appendText(date.toString() + " " + slot.toString() + " " + patient.getProfile().toString()
+                    + " with " + technician.toString() + " in " + room.toString() + " booked.\n");
+        }
+
     }
 
     /**
