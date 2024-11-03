@@ -614,6 +614,7 @@ public class ClinicManagerController implements Initializable {
             showAlert("Invalid Reschedule", "No appointments scheduled.", Alert.AlertType.WARNING);
             return;
         }
+        boolean hasErrors = false;
         StringBuilder missingFields = new StringBuilder();
         Date date = getDateSelectedR();
         Timeslot oldSlot = getOldTimeslot();
@@ -624,9 +625,11 @@ public class ClinicManagerController implements Initializable {
         }
         if (oldSlot == null) {
             missingFields.append("• Old Timeslot\n");
+            hasErrors = true;
         }
         if (newSlot == null) {
             missingFields.append("• New Timeslot\n");
+            hasErrors = true;
         }
         if (patient == null) {
             missingFields.append("• Patient Details\n");
@@ -641,43 +644,38 @@ public class ClinicManagerController implements Initializable {
         } else {
             return;
         }
-
         checkApptDate(formattedDate);
         if (patient != null) {
             checkDOB(patient.getProfile().getDob());
         }
         int apptIndex = -3;
-        if(patient != null) {
+        if(patient != null && !hasErrors) {
             apptIndex = methods.identifyAppointment(appts, patient.getProfile(), date, oldSlot);
-
         }
-
-        if (apptIndex == -1 && patient != null) {
+        if (apptIndex == -1 && patient != null && !hasErrors) {
             outputAreaR.appendText(formattedDate + " " + oldSlot.toString() + " " + patient.getProfile().getFirstName() + " " + patient.getProfile().getLastName() + " " + patient.getProfile().getDob().toString() + " does not exist.");
             return;
         }
         int apptIndex2 = -3;
-        if(patient != null){
+        if(patient != null && !hasErrors){
             apptIndex2 = methods.identifyAppointment(appts, patient.getProfile(), date, newSlot);
         }
-        if (apptIndex2 !=-1 && patient != null) {
+        if (apptIndex2 !=-1 && patient != null && !hasErrors) {
             Appointment appointment = appts.get(apptIndex2);
             outputAreaR.appendText("\n" + patient.getProfile().toString() + " has an existing appointment at " + appointment.getDate().toString() + " " + newSlot.toString() + "\n");
             return;
         }
         Appointment appointment = null;
         Provider provider = null;
-        if(patient != null){
+        if(patient != null && !hasErrors){
              appointment = appts.get(apptIndex);
              provider = (Provider) appointment.getProvider();
         }
-
-        if (methods.timeslotTaken(appts, provider, newSlot, date) != -1) {
+        if (!hasErrors && methods.timeslotTaken(appts, provider, newSlot, date) != -1) {
             outputAreaR.appendText("\n" + provider.toString() + " is not available at " + newTimeslot.getValue() + "\n");
             return;
         }
-
-        if(patient != null){
+        if(patient != null && !hasErrors){
             Appointment newAppt = appts.get(apptIndex);
             newAppt.setTimeslot(newSlot);
             outputAreaR.appendText("\nRescheduled to " + formattedDate + " " + newSlot.toString() + " " + patient.getProfile().getFirstName() + " " + patient.getProfile().getLastName() + " " + patient.getProfile().getDob().toString() + " " + newAppt.getProvider().toString() + "\n");
