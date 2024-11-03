@@ -406,21 +406,27 @@ public class ClinicManagerController implements Initializable {
         if (!apptDateValid || !dobValid) {
             return;
         }
-        Radiology room = setRadioRoom(imagingType);
+        Radiology room = null;
+        if(imagingType != null){
+            room = setRadioRoom(imagingType);
+        }
         if (room == null) {
             showAlertForSchedule("Invalid Imaging Type", imagingType + " is not a valid imaging service.");
             return;
         }
         int index = -3;
-        if(patient != null){
+        if(patient != null && slot != null && date != null){
             index = methods.identifyImagingAppt2(imagingAppts, patient.getProfile(), date, slot);
         }
-        if (patient != null && index != -1) {
+        if (patient != null && index != -1 && date != null) {
             showAlertForSchedule("Duplicate Appointment", patient.getProfile().toString() + " has an existing appointment at the same time.");
             return;
         }
-        Technician technician = techAvailable(imagingAppts, date, slot, room);
-        if (technician == null) {
+        Technician technician = null;
+        if(room != null && slot != null && date != null){
+            technician = techAvailable(imagingAppts, date, slot, room);
+        }
+        if (technician == null && slot != null && date != null) {
             showAlertForSchedule("No Technician Available", "No available technician for " + imagingType + " at " + slot.toString());
             return;
         }
@@ -429,7 +435,7 @@ public class ClinicManagerController implements Initializable {
             showAlert("Load Provider's Error", "The providers have not been loaded.", Alert.AlertType.WARNING);
         }
 
-        if(patient != null){
+        if(patient != null && room != null && slot != null && date != null){
             Imaging newImageAppt = new Imaging(date, slot, patient, technician, room);
             appts.add(newImageAppt);
             imagingAppts.add(newImageAppt);
