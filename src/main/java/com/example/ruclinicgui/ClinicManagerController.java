@@ -75,7 +75,6 @@ public class ClinicManagerController implements Initializable {
             return null;
         }
         String[] dateParts = appointmentDatePicker.getEditor().getText().split("/");
-
         if (dateParts.length != 3) {
             return null;
         }
@@ -104,7 +103,6 @@ public class ClinicManagerController implements Initializable {
             return null;
         }
         String[] dateParts = appointmentDatePickerR.getEditor().getText().split("/");
-
         if (dateParts.length != 3) {
             return null;
         }
@@ -434,7 +432,6 @@ public class ClinicManagerController implements Initializable {
         {
             showAlert("Load Provider's Error", "The providers have not been loaded.", Alert.AlertType.WARNING);
         }
-
         if(patient != null && room != null && slot != null && date != null){
             Imaging newImageAppt = new Imaging(date, slot, patient, technician, room);
             appts.add(newImageAppt);
@@ -442,7 +439,6 @@ public class ClinicManagerController implements Initializable {
             outputArea.appendText(date.toString() + " " + slot.toString() + " " + patient.getProfile().toString()
                     + " with " + technician.toString() + " in " + room.toString() + " booked.\n");
         }
-
     }
 
     /**
@@ -535,7 +531,6 @@ public class ClinicManagerController implements Initializable {
     @FXML
     protected void cancel() {
         StringBuilder missingFields = new StringBuilder();
-
         if (getDateSelected() == null) {
             missingFields.append("• Appointment Date\n");
         }
@@ -609,8 +604,7 @@ public class ClinicManagerController implements Initializable {
      */
     @FXML
     protected void reschedule() {
-        if(appts.size() == 0)
-        {
+        if(appts.size() == 0) {
             showAlert("Invalid Reschedule", "No appointments scheduled.", Alert.AlertType.WARNING);
             return;
         }
@@ -873,7 +867,6 @@ public class ClinicManagerController implements Initializable {
                 initializeToggleButtons();
                 loadProviders(file);
                 printProviders();
-
                 loadProvidersButton.setDisable(true);
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
