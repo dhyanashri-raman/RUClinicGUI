@@ -89,7 +89,8 @@ public class ClinicManagerController implements Initializable {
      */
     @FXML
     private Date getDateSelectedR() {
-        if (appointmentDatePickerR.getValue() == null) {
+        String date = appointmentDatePickerR.getValue().toString();
+        if (date == null || date.isEmpty()) {
             return null;
         }
         String[] dateParts = appointmentDatePickerR.getEditor().getText().split("/");
@@ -219,6 +220,11 @@ public class ClinicManagerController implements Initializable {
         }
         String[] dateParts = selectedDateText.split("/");
         if (dateParts.length != 3) {
+            return null;
+        }
+        String firstName = fname.getText();
+        String lastName = lname.getText();
+        if (firstName == null || firstName.isEmpty() || lastName == null || lastName.isEmpty()) {
             return null;
         }
         int month = Integer.parseInt(dateParts[0]);
@@ -608,20 +614,20 @@ public class ClinicManagerController implements Initializable {
         int apptIndex2 = methods.identifyAppointment(appts, patient.getProfile(), date, newSlot);
         if (apptIndex2 !=-1) {
             Appointment appointment = appts.get(apptIndex2);
-            outputAreaR.appendText(patient.getProfile().toString() + " has an existing appointment at " + appointment.getDate().toString() + " " + newSlot.toString() + "\n");
+            outputAreaR.appendText("\n" + patient.getProfile().toString() + " has an existing appointment at " + appointment.getDate().toString() + " " + newSlot.toString() + "\n");
             return;
         }
         Appointment appointment = appts.get(apptIndex);
         Provider provider = (Provider) appointment.getProvider();
         if (methods.timeslotTaken(appts, provider, newSlot, date) != -1) {
-            outputAreaR.appendText(provider.toString() + " is not available at " + newTimeslot.getValue() + "\n");
+            outputAreaR.appendText("\n" + provider.toString() + " is not available at " + newTimeslot.getValue() + "\n");
             return;
         }
 
         Appointment newAppt = appts.get(apptIndex);
         newAppt.setTimeslot(newSlot);
 
-        outputAreaR.appendText("Rescheduled to " + formattedDate + " " + newSlot.toString() + " " + patient.getProfile().getFirstName() + " " + patient.getProfile().getLastName() + " " + patient.getProfile().getDob().toString() + " " + newAppt.getProvider().toString() + "\n");
+        outputAreaR.appendText("\nRescheduled to " + formattedDate + " " + newSlot.toString() + " " + patient.getProfile().getFirstName() + " " + patient.getProfile().getLastName() + " " + patient.getProfile().getDob().toString() + " " + newAppt.getProvider().toString() + "\n");
     }
 
     /**
