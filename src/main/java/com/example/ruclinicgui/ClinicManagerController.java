@@ -561,7 +561,7 @@ public class ClinicManagerController implements Initializable {
             outputArea.appendText(date.toString() + " " + slot.toString() + " " + patient.getProfile().toString() + " - appointment has been canceled.\n");
             return;
         }
-        outputArea.appendText(date.toString() + " " + slot.toString() + " " + patient.getProfile().toString() + " - h.\n");
+        outputArea.appendText(date.toString() + " " + slot.toString() + " " + patient.getProfile().toString() + " - appointment does not exist.\n");
     }
 
     /**
